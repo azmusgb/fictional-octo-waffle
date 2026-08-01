@@ -1,3 +1,4 @@
+.github/workflows/validate-workbench.yml
 .gitignore
 ARCHITECTURE.md
 CHANGELOG.md
@@ -8,6 +9,7 @@ README.md
 VALIDATION.md
 WorkbenchStudio.sln
 client/index.html
+client/package-lock.json
 client/package.json
 client/public/favicon.svg
 client/public/site.webmanifest
