@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - workbench-studio-v8-3-portable
-    paths:
-      - .github/workflows/materialize-v83-portable.yml
 
 permissions:
   contents: write
@@ -46,15 +44,7 @@ jobs:
           if not scripts:
               raise SystemExit('No hosted script found')
           Path('/tmp/workbench-v83-hosted.js').write_text(scripts[-1])
-          required = [
-              'Portable Workspace v8.3',
-              'createHostedProfile',
-              'parseHostedPackage',
-              'restoreHostedBackup',
-              'continuousCloudSync',
-              'workbench-studio-preferences',
-          ]
-          for symbol in required:
+          for symbol in ['Portable Workspace v8.3','createHostedProfile','parseHostedPackage','restoreHostedBackup','continuousCloudSync','workbench-studio-preferences']:
               if symbol not in html:
                   raise SystemExit(f'Missing hosted symbol: {symbol}')
           PY
