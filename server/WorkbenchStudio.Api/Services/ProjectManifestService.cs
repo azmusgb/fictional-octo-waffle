@@ -28,7 +28,7 @@ public sealed class ProjectManifestService(IDbContextFactory<WorkbenchDbContext>
         {
             schemaVersion = "workbench-project-manifest/1.0",
             generatedAtUtc = DateTimeOffset.UtcNow,
-            applicationVersion = "6.0.0",
+            applicationVersion = "0.8.4",
             project = new { project.Id, project.Name, project.CreatedAtUtc, project.UpdatedAtUtc },
             imports = project.Imports.OrderBy(x => x.CreatedAtUtc).Select(import => new
             {
@@ -50,7 +50,7 @@ public sealed class ProjectManifestService(IDbContextFactory<WorkbenchDbContext>
                     artifact.ParserId,
                     artifact.ParserVersion,
                     review = DtoMapper.ToDto(artifact.Review),
-                    findings = artifact.Findings.Select(DtoMapper.ToDto).ToArray()
+                    findings = artifact.Findings.Select(finding => DtoMapper.ToDto(finding)).ToArray()
                 }).ToArray()
             }).ToArray()
         };
