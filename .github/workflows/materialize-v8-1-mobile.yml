@@ -1,0 +1,40 @@
+name: Materialize Workbench Studio v8.1 mobile release
+
+on:
+  push:
+    branches:
+      - mobile-v8-1
+    paths:
+      - '.github/workflows/materialize-v8-1-mobile.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download and verify mobile release archive
+        shell: bash
+        run: |
+          curl --fail --location --retry 3 --output /tmp/WorkbenchStudio-v8.1-mobile.zip 'https://at.adobe.com/HHvyrMFuOCl3slPu'
+          echo "f70159271342cf5c6d45ea4d04b4c5459ae0ce9028212c5c4f736628291653fe  /tmp/WorkbenchStudio-v8.1-mobile.zip" | sha256sum --check --strict
+          unzip -q /tmp/WorkbenchStudio-v8.1-mobile.zip -d /tmp/workbench-mobile
+          test -f /tmp/workbench-mobile/WorkbenchStudio-v8/README.md
+          test -f /tmp/workbench-mobile/WorkbenchStudio-v8/client/src/App.tsx
+          test -f /tmp/workbench-mobile/WorkbenchStudio-v8/client/src/styles/app.css
+          test -f /tmp/workbench-mobile/WorkbenchStudio-v8/hosted/index.html
+
+      - name: Materialize repository tree
+        shell: bash
+        run: |
+          rsync -a --delete --exclude='.git/' /tmp/workbench-mobile/WorkbenchStudio-v8/ ./
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add Workbench Studio v8.1 mobile optimization"
+          git push origin HEAD:mobile-v8-1
