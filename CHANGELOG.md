@@ -1,32 +1,38 @@
 # Changelog
 
-## 0.6.0 — 2026-08-01
+## 0.7.0 — 2026-08-01
 
-### Continuous evidence operations
+### Decision Cockpit
 
-- Added persisted watch-folder definitions with manual, hourly, and daily scan modes.
-- Added metadata fingerprinting and automatic immutable snapshot creation.
-- Added a background watch worker with an hourly minimum automatic cadence.
-- Added ignore patterns, approval flags, pause/resume, scan-now, and last-import state.
+- Added transparent smart-triage ranking with factor breakdowns.
+- Added priority bands and direct artifact navigation.
+- Added risk-factor aggregation across the highest-priority evidence.
 
-### Data intelligence
+### Baseline policies
 
-- Added persisted data profiles for CSV, JSON, XML, XLSX, logs, and text evidence.
-- Added blanks, duplicates, row-width drift, structure depth, formula-summary, and parser-failure signals.
-- Added persisted lineage edges for containment, duplicate content, cross-file references, and finding evidence.
+- Added persisted approved-snapshot baseline policies.
+- Added default threshold generation from baseline metrics.
+- Added explicit rule evaluation and Passed, Improved, Regressed, or Needs Approval status.
 
-### Investigation workflows
+### Automation
 
-- Added persisted investigation playbooks with ordered steps, progress, status, and run summaries.
-- Added Agent Setup, Watch Folders, Profiler, Impact Studio, Playbooks, and Privacy Center to the hosted experience.
-- Added a React Operations Center connected to the local-agent APIs.
+- Added persisted decision-readiness automation recipes.
+- Added profile, privacy, impact, baseline, and triage steps.
+- Added manual, hourly, daily, and on-snapshot triggers.
+- Added background recipe execution with progress and run summaries.
 
-### Privacy
+### Evidence Assistant
 
-- Added local sensitive-value candidate detection.
-- Added masked evidence previews and persisted review status.
-- Added redacted derivative ZIP exports for supported text artifacts.
+- Added local citation-first evidence questions.
+- Added ranked citations to findings and bounded artifact previews.
+- Added confidence labels and follow-up query suggestions.
 
-### Compatibility
+### Handoff
 
-- Retained the Safari-compatible direct-source Vercel loader; no browser gzip or base64 decoding is required.
+- Added portable decision-brief ZIP export.
+- Added triage, findings, baselines, profiles, snapshot identity, and provenance records.
+
+### Hosted experience
+
+- Expanded the hosted product from 19 to 24 workflow surfaces.
+- Added dedicated Decision Cockpit, Baselines, Automation, Evidence Assistant, and Handoff experiences.

@@ -1,8 +1,8 @@
-# Workbench Studio v6 architecture
+# Workbench Studio v7 architecture
 
 ## Core invariant
 
-Every derived profile, privacy detection, lineage edge, playbook result, finding, review decision, comparison result, and export must remain traceable to an immutable import snapshot and its stored artifact identity.
+Every derived profile, finding, privacy detection, lineage edge, priority factor, baseline result, automation result, evidence answer, review decision, and export must remain traceable to an immutable snapshot and its stored artifact identity.
 
 ## Runtime topology
 
@@ -11,47 +11,61 @@ Hosted or local React shell
         │ HTTP to approved local origin
         ▼
 ASP.NET Core local agent
-        ├── project/import/artifact APIs
-        ├── safe ZIP extraction + parser registry
-        ├── import queue + worker
+        ├── immutable import queue and parsers
         ├── watch-folder scheduler
         ├── data profile service
-        ├── lineage/impact service
-        ├── playbook orchestration service
-        ├── privacy scan + redacted export service
-        ├── comparison/search/report services
+        ├── lineage and impact service
+        ├── privacy and redaction service
+        ├── investigation playbooks
+        ├── decision triage service
+        ├── baseline evaluation service
+        ├── automation recipe worker
+        ├── citation-first evidence assistant
+        └── portable decision brief builder
         │
         ├── SQLite metadata
-        └── disk-backed originals, extracts, caches, exports
+        └── disk-backed originals, extracts, caches, and exports
 ```
 
-## Persisted v6 records
+## Decision Operations data
 
-- `WatchFolders`: local path, schedule, ignore patterns, fingerprint, scan state, last snapshot
-- `DataProfiles`: artifact metrics and quality issues
-- `LineageEdges`: source/target relationship, edge type, label, evidence
-- `PrivacyDetections`: kind, severity, source location, masked preview, review status
-- `Playbooks`: ordered step JSON, run status, progress, summary, timestamps
+### BaselinePolicies
 
-## Watch scan lifecycle
+Stores the approved baseline snapshot, explicit metric rules, last evaluated snapshot, complete rule-level result JSON, status, and timestamps.
 
-1. Resolve and validate the configured local folder.
-2. Enumerate files after ignore-pattern filtering.
-3. Build a deterministic metadata fingerprint from normalized path, size, and modified time.
-4. Stop when the fingerprint is unchanged unless the user forces a scan.
-5. Safely stage an archive copy in a new import workspace.
-6. Persist an immutable queued import.
-7. Submit the import to the existing parser queue.
-8. Retain the watch folder's new fingerprint and import identifier.
+### AutomationRecipes
 
-## Profiling boundary
+Stores visible ordered steps, trigger mode, schedule interval, enable state, progress, status, last-run summary, and timestamps.
 
-Profiles are deterministic and bounded. They are not statistical guarantees. Large text artifacts are sampled, XLSX profiles reuse the package parser's bounded structure summary, and parser errors become explicit profile issues.
+### Triage
 
-## Privacy boundary
+Triage is calculated on demand from persisted evidence. Each score is the sum of visible factors:
 
-Privacy detection uses local deterministic patterns. Matches are candidates requiring review, not legal or compliance determinations. Redacted ZIPs contain only supported text artifacts and do not modify originals.
+- Error, warning, and informational findings
+- Open or confirmed privacy detections
+- Lineage and impact edges
+- Parser failure or unsupported status
+- Human review state
+
+Scores are capped at 100 and mapped to priority bands. They are advisory and are not persisted as authoritative conclusions.
+
+### Evidence Assistant
+
+The default assistant is deterministic and local. It tokenizes the user question, ranks matching findings and bounded artifact previews, and returns citations. It does not use external inference or upload evidence.
+
+### Decision brief
+
+A ZIP derivative contains JSON records for snapshot identity, triage, findings, baselines, and profiles plus a safety notice. Original evidence bytes are not duplicated into the brief by default.
+
+## Automation trigger model
+
+The background recipe worker checks once per minute but enforces the configured minimum cadence:
+
+- `OnSnapshot`: latest completed snapshot is newer than the last run
+- `Hourly`: at least configured interval, minimum 60 minutes
+- `Daily`: at least configured interval, minimum 1,440 minutes
+- `Manual`: never runs automatically
 
 ## Persistence compatibility
 
-The current bootstrapper uses `CREATE TABLE IF NOT EXISTS` for additive v6 tables so existing local v5 workspaces can open without data loss. A formal migration chain remains recommended before broad production distribution.
+Additive v7 tables use `CREATE TABLE IF NOT EXISTS` so existing v6 workspaces can open without data loss. A formal migration chain remains required before broad production distribution.

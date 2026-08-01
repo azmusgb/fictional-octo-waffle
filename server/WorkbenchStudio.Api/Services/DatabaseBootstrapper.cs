@@ -100,6 +100,41 @@ public static class DatabaseBootstrapper
                 UpdatedAtUtc TEXT NOT NULL
             );
             CREATE INDEX IF NOT EXISTS IX_Playbooks_ProjectId_UpdatedAtUtc ON Playbooks (ProjectId, UpdatedAtUtc);
+
+            CREATE TABLE IF NOT EXISTS BaselinePolicies (
+                Id TEXT NOT NULL CONSTRAINT PK_BaselinePolicies PRIMARY KEY,
+                ProjectId TEXT NOT NULL,
+                Name TEXT NOT NULL,
+                BaselineImportId TEXT NOT NULL,
+                RulesJson TEXT NOT NULL,
+                Status INTEGER NOT NULL,
+                LastEvaluatedImportId TEXT NULL,
+                LastResultJson TEXT NULL,
+                LastEvaluatedAtUtc TEXT NULL,
+                CreatedAtUtc TEXT NOT NULL,
+                UpdatedAtUtc TEXT NOT NULL
+            );
+            CREATE INDEX IF NOT EXISTS IX_BaselinePolicies_ProjectId_UpdatedAtUtc
+                ON BaselinePolicies (ProjectId, UpdatedAtUtc);
+
+            CREATE TABLE IF NOT EXISTS AutomationRecipes (
+                Id TEXT NOT NULL CONSTRAINT PK_AutomationRecipes PRIMARY KEY,
+                ProjectId TEXT NOT NULL,
+                Name TEXT NOT NULL,
+                Description TEXT NOT NULL,
+                StepsJson TEXT NOT NULL,
+                Enabled INTEGER NOT NULL,
+                TriggerMode TEXT NOT NULL,
+                ScheduleIntervalMinutes INTEGER NOT NULL,
+                Status INTEGER NOT NULL,
+                ProgressPercent INTEGER NOT NULL,
+                LastRunSummary TEXT NULL,
+                LastRunAtUtc TEXT NULL,
+                CreatedAtUtc TEXT NOT NULL,
+                UpdatedAtUtc TEXT NOT NULL
+            );
+            CREATE INDEX IF NOT EXISTS IX_AutomationRecipes_ProjectId_Enabled_UpdatedAtUtc
+                ON AutomationRecipes (ProjectId, Enabled, UpdatedAtUtc);
             """, cancellationToken);
     }
 }

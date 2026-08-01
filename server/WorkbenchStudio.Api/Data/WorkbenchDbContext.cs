@@ -16,6 +16,8 @@ public sealed class WorkbenchDbContext(DbContextOptions<WorkbenchDbContext> opti
     public DbSet<LineageEdgeEntity> LineageEdges => Set<LineageEdgeEntity>();
     public DbSet<PrivacyDetectionEntity> PrivacyDetections => Set<PrivacyDetectionEntity>();
     public DbSet<PlaybookEntity> Playbooks => Set<PlaybookEntity>();
+    public DbSet<BaselinePolicyEntity> BaselinePolicies => Set<BaselinePolicyEntity>();
+    public DbSet<AutomationRecipeEntity> AutomationRecipes => Set<AutomationRecipeEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -128,6 +130,24 @@ public sealed class WorkbenchDbContext(DbContextOptions<WorkbenchDbContext> opti
             entity.Property(x => x.Name).HasMaxLength(200).IsRequired();
             entity.Property(x => x.Description).HasMaxLength(2000).IsRequired();
             entity.HasIndex(x => new { x.ProjectId, x.UpdatedAtUtc });
+        });
+
+
+        modelBuilder.Entity<BaselinePolicyEntity>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Name).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.RulesJson).IsRequired();
+            entity.HasIndex(x => new { x.ProjectId, x.UpdatedAtUtc });
+        });
+
+        modelBuilder.Entity<AutomationRecipeEntity>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Name).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.Description).HasMaxLength(2000).IsRequired();
+            entity.Property(x => x.TriggerMode).HasMaxLength(40).IsRequired();
+            entity.HasIndex(x => new { x.ProjectId, x.Enabled, x.UpdatedAtUtc });
         });
 
         modelBuilder.Entity<ExportRecordEntity>(entity =>

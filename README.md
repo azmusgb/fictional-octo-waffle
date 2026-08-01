@@ -1,98 +1,82 @@
-# Workbench Studio v6
+# Workbench Studio v7
 
-Workbench Studio is a local-first evidence operations and investigation application. It combines a React/TypeScript shell, an ASP.NET Core processing agent, SQLite metadata, disk-backed immutable artifacts, safe format parsers, human review, structured comparison, continuous intake, quality profiling, impact analysis, repeatable playbooks, and privacy-safe exports.
+Workbench Studio is a local-first evidence operations, investigation, and decision-support workbench. It combines a React/TypeScript desktop-style shell, an ASP.NET Core local processing agent, SQLite metadata, disk-backed immutable artifacts, deterministic parsers, human review, continuous intake, quality profiling, impact analysis, privacy-safe exports, and transparent decision operations.
 
 ## Live hosted experience
 
-Production: https://workbench-studio-v6.vercel.app
+Production deployment is recorded in `DEPLOYMENT.md` after release. The hosted adapter uses representative browser-persisted data. Original evidence is processed only by the connected local agent.
 
-## v6 release objective
+## v7 product loop
 
-Version 6 turns Workbench Studio from a manually operated investigation tool into a continuously useful evidence system:
+`Connect → Watch → Snapshot → Profile → Validate → Trace → Prioritize → Compare to Baseline → Automate → Ask Evidence → Decide → Handoff`
 
-1. Connect and validate the local processing agent.
-2. Watch approved local folders for meaningful changes.
-3. Create immutable snapshots without repeated manual uploads.
-4. Profile data quality before opening individual records.
-5. Trace changes through findings, cases, and derived outputs.
-6. Run repeatable investigation playbooks.
-7. Detect sensitive-value candidates and generate redacted derivatives.
+## Signature v7 functionality
 
-## Signature v6 functionality
+### Decision Cockpit
 
-### Agent setup and recovery
+- Transparent artifact priority scores
+- Explicit scoring factors for finding severity, privacy candidates, parser state, impact edges, and review status
+- Critical, high, medium, and low priority bands
+- Direct navigation from priority items to source artifacts
+- Advisory scoring only; evidence and human approval remain authoritative
 
-- Localhost discovery workflow
-- Shell/agent major-version compatibility check
-- Workspace selection and validation
-- SQLite, original-file, and available-capacity checks
-- Last-project restoration and reconnect states
+### Baseline Policy Center
 
-### Watch folders and automatic snapshots
+- Approve any immutable snapshot as a baseline
+- Generate default rules from accepted snapshot metrics
+- Define inspectable `<=`, `>=`, and `==` thresholds
+- Evaluate errors, warnings, parser failures, unsupported artifacts, inventory counts, privacy candidates, and other metrics
+- Classify results as Passed, Improved, Regressed, or Needs Approval
+- Persist complete per-rule outcomes and evaluation timestamps
 
-- Persisted local watch-folder definitions
-- Manual, hourly, and daily modes
-- Ignore patterns and approval gates
-- Metadata fingerprints for change detection
-- Safe ZIP staging of folder contents
-- Immutable import creation through the existing import queue
-- Background scan worker with a one-minute scheduler and an hourly minimum automatic cadence
+### Automation Studio
 
-### Data Quality Profiler
+- Compose reusable decision-readiness recipes
+- Supported steps include profiling, privacy scan, lineage rebuild, baseline evaluation, and triage ranking
+- Manual, hourly, daily, and on-snapshot triggers
+- Background worker executes due recipes against the latest completed immutable snapshot
+- Persisted progress, result summaries, failure state, enable/pause controls, and last-run timestamps
 
-- Persisted per-artifact profiles
-- CSV row, column, blank-cell, duplicate-row, and row-width metrics
-- JSON node, depth, object, and array metrics
-- XML element, attribute, and unique-name metrics
-- Log line, warning, and error counts
-- XLSX parser-summary reuse
-- Duplicate-content and parser-failure issues
+### Evidence Assistant
 
-### Lineage and Impact Studio
+- Ask concrete questions of the selected snapshot
+- Searches only local artifact metadata, bounded previews, and validation evidence
+- Returns source-linked citations with artifact, finding, source location, excerpt, and basis
+- Labels confidence from available supporting evidence
+- Never represents an unsupported inference as an observed fact
 
-- Archive containment edges
-- SHA-256 duplicate-content edges
-- Cross-file filename-reference edges
-- Finding-to-source evidence edges
-- Rebuildable persisted lineage graph
-- Impact summaries for changed sources and downstream outputs
+### Handoff Brief Builder
 
-### Investigation Playbooks
+- Generates a portable ZIP decision brief
+- Includes snapshot identity, transparent triage results, findings, baseline policies, data profiles, and provenance
+- Records generation time and safety notice
+- Leaves original evidence unchanged
 
-- Persisted playbook definitions and ordered steps
-- Profile, privacy, lineage/impact, and review step types
-- Run status, progress, timestamp, and summary
-- Starter workflows for evidence readiness and regression review
+## Existing v6 operations retained
 
-### Privacy and Redaction Center
-
-- Local pattern detection for SSNs, email addresses, phone numbers, payment-card candidates, and API-key candidates
-- Masked previews and source locations
-- Persisted detection status
-- Redacted derivative ZIP export for supported text artifacts
-- Immutable originals remain untouched
-
-## Existing investigation functionality retained
-
+- Guided local-agent onboarding
+- Watch folders and incremental immutable snapshots
+- Data Quality Profiler
+- Lineage and Impact Studio
+- Investigation Playbooks
+- Privacy and Redaction Center
 - Evidence Workstation
 - Import Control Room
 - Caseboard
 - Query Lab
-- Validation Rule Studio
-- Operational Review Queue
-- Snapshot Diff Studio
+- Rule Studio
+- Review Queue
+- Diff Studio
 - Relationship Map
 - Activity Timeline
-- Saved views
-- Reports and project manifest
-- Theme, density, command palette, focus mode, tour, and undo
+- Saved views and exports
 
 ## Local architecture
 
 - UI: React 19 + TypeScript + Vite
-- Local processing agent: ASP.NET Core targeting .NET 10
+- Local agent: ASP.NET Core targeting .NET 10
 - Metadata: SQLite
-- Artifact storage: disk-backed originals, extraction cache, and exports
+- Evidence storage: disk-backed originals, extraction cache, and exports
 - Parsers: JSON, CSV, XML, text/log, and XLSX
 - Tests: xUnit and Vitest
 
@@ -111,13 +95,15 @@ Open `http://localhost:5173`.
 .\scripts\build.ps1
 ```
 
-The build script restores dependencies, runs backend and frontend tests, builds the Vite client, copies it into the ASP.NET `wwwroot`, and publishes a combined local release.
+The script restores dependencies, runs backend and frontend tests, builds the Vite client, copies it into ASP.NET `wwwroot`, and publishes the combined local release.
 
 ## Safety boundary
 
 - Imported content is never executed.
 - ZIP extraction is path-bounded and resource-limited.
 - XML DTD processing and external resolution are prohibited.
-- Watch folders stage a ZIP copy; source folders are never modified.
-- Privacy exports create redacted derivatives and retain original evidence.
-- Hosted demo data stays in browser storage unless the user connects the local agent.
+- Watch folders are copied into immutable staging; source folders are never modified.
+- Sensitive-value detections are candidates requiring human review.
+- Evidence Assistant answers remain citation-bound to the selected snapshot.
+- Priority scores and baseline results are decision aids, not authoritative facts.
+- Handoff briefs contain derived records and provenance; original evidence remains local unless explicitly shared.

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState, type ChangeEvent, type Keybo
 import { ArtifactInspector } from './components/ArtifactInspector';
 import { CommandPalette } from './components/CommandPalette';
 import { CompareView } from './components/CompareView';
+import { DecisionCenter } from './components/DecisionCenter';
 import { ImportDropzone } from './components/ImportDropzone';
 import { InventoryExplorer } from './components/InventoryExplorer';
 import { MetricCard } from './components/MetricCard';
@@ -22,6 +23,7 @@ const navItems: Array<{ id: ViewId; label: string; symbol: string; description: 
   { id: 'findings', label: 'Findings', symbol: '!', description: 'Validation, source evidence, and actions' },
   { id: 'compare', label: 'Compare', symbol: '⇄', description: 'Immutable snapshot differences' },
   { id: 'operations', label: 'Operations', symbol: '◉', description: 'Agent setup, watches, profiles, impact, playbooks, and privacy' },
+  { id: 'decisions', label: 'Decision center', symbol: '◆', description: 'Triage, baselines, automation, grounded answers, and handoff' },
   { id: 'exports', label: 'Exports', symbol: '⇩', description: 'Portable reports and machine-readable data' },
   { id: 'system', label: 'System center', symbol: '⚙', description: 'Local agent connection, limits, and diagnostics' },
 ];
@@ -33,6 +35,7 @@ const pageDescriptions: Record<ViewId, string> = {
   findings: 'Prioritize validation issues, source locations, evidence excerpts, and concrete recommended actions.',
   compare: 'Use normalized paths and SHA-256 identity to compare versions without altering either snapshot.',
   operations: 'Continuously ingest local evidence, profile quality, trace impact, run repeatable playbooks, and create privacy-safe exports.',
+  decisions: 'Prioritize work transparently, measure regressions against approved baselines, automate readiness checks, ask citation-first questions, and package portable decision briefs.',
   exports: 'Generate portable inventory, evidence reports, and a project-level manifest from immutable local records.',
   system: 'Verify the local processing agent, inspect its safety envelope, and configure a hosted or same-origin browser shell.',
 };
@@ -341,7 +344,7 @@ function App() {
       <header className="topbar">
         <div className="brand-lockup">
           <div className="brand-mark" aria-hidden="true">W</div>
-          <div><strong>Workbench Studio</strong><span>Evidence operations · v4</span></div>
+          <div><strong>Workbench Studio</strong><span>Decision operations · v7</span></div>
         </div>
 
         <div className="topbar-center">
@@ -491,6 +494,8 @@ function App() {
             {view === 'compare' ? <CompareView projectId={selectedProject.id} imports={imports} /> : null}
 
             {view === 'operations' ? <OperationsCenter projectId={selectedProject.id} importId={selectedImportId} onToast={setToast} /> : null}
+
+            {view === 'decisions' ? <DecisionCenter projectId={selectedProject.id} importId={selectedImportId} imports={imports} onInspectArtifact={setSelectedArtifactId} onToast={setToast} /> : null}
 
             {view === 'exports' ? selectedImport ? (
               <div className="exports-grid">
