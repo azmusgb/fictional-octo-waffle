@@ -1,0 +1,56 @@
+name: Package Workbench Studio v8.3 source
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: workbench-studio-v8-3-portable
+          fetch-depth: 1
+
+      - name: Create verified source archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/package-v83-source.yml
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path('hosted/index.html').read_text()
+          scripts = re.findall(r'<script>(.*?)</script>', html, re.S)
+          if not scripts:
+              raise SystemExit('No hosted script found')
+          Path('/tmp/workbench-v83-hosted.js').write_text(scripts[-1])
+          required = ['Workbench Studio v8.3','workbench-studio-preferences','createHostedProfile','parseHostedPackage']
+          for symbol in required:
+              if symbol not in html:
+                  raise SystemExit(f'Missing source symbol: {symbol}')
+          PY
+          node --check /tmp/workbench-v83-hosted.js
+          python -m json.tool package.json >/dev/null
+          python -m json.tool client/package.json >/dev/null
+          mkdir -p /tmp/WorkbenchStudio-v8.3
+          rsync -a --exclude='.git' ./ /tmp/WorkbenchStudio-v8.3/
+          cd /tmp
+          zip -qr WorkbenchStudio-v8.3.zip WorkbenchStudio-v8.3
+          sha256sum WorkbenchStudio-v8.3.zip > WorkbenchStudio-v8.3.zip.sha256
+          unzip -t WorkbenchStudio-v8.3.zip >/dev/null
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: workbench-studio-v8.3-source
+          path: |
+            /tmp/WorkbenchStudio-v8.3.zip
+            /tmp/WorkbenchStudio-v8.3.zip.sha256
+          if-no-files-found: error
+          compression-level: 0
