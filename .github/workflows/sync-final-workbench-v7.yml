@@ -1,0 +1,40 @@
+name: Sync final Workbench Studio v7 source
+
+on:
+  push:
+    branches:
+      - sync-final-v7
+    paths:
+      - '.github/workflows/sync-final-workbench-v7.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download and verify final archive
+        shell: bash
+        run: |
+          curl --fail --location --retry 3 --output /tmp/WorkbenchStudio-v7.zip 'https://at.adobe.com/xkcFkGIHp55dbUTB'
+          echo "f80f347fc1f772915cad71bbcbd5b9603e65e68d03a212139c379001d8c8daec  /tmp/WorkbenchStudio-v7.zip" | sha256sum --check --strict
+          unzip -q /tmp/WorkbenchStudio-v7.zip -d /tmp/workbench-source
+          test -f /tmp/workbench-source/WorkbenchStudio-v7/DEPLOYMENT.md
+          test -f /tmp/workbench-source/WorkbenchStudio-v7/VALIDATION.md
+          grep -q 'workbench-studio-v7.vercel.app' /tmp/workbench-source/WorkbenchStudio-v7/DEPLOYMENT.md
+          grep -q '90c38d36cbe97e389dc79eeb4f9fe11ea92e44b4' /tmp/workbench-source/WorkbenchStudio-v7/hosted/vercel-transport/index.html
+
+      - name: Synchronize exact final tree
+        shell: bash
+        run: |
+          rsync -a --delete --exclude='.git/' /tmp/workbench-source/WorkbenchStudio-v7/ ./
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Sync final Workbench Studio v7 release"
+          git push origin HEAD:sync-final-v7
