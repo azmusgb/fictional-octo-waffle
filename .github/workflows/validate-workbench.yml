@@ -1,0 +1,108 @@
+name: Validate Workbench Studio
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-workbench-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: Frontend and hosted experience
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install exact dependencies
+        run: npm ci --prefix client --no-audit --no-fund
+
+      - name: Build production client
+        run: npm --prefix client run build
+
+      - name: Run frontend tests
+        run: npm --prefix client run test
+
+      - name: Validate hosted application
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          import json, re
+
+          html = Path('hosted/index.html').read_text()
+          HTMLParser().feed(html)
+          scripts = re.findall(r'<script>(.*?)</script>', html, re.S)
+          if not scripts:
+              raise SystemExit('No hosted script found')
+          Path('/tmp/workbench-hosted.js').write_text(scripts[-1])
+
+          required = [
+              'experience-hero',
+              'renderExperienceHero',
+              'Portable Workspace v8.4',
+              'v84-summary',
+              'workbench-preferences-v8.4.json',
+          ]
+          for symbol in required:
+              if symbol not in html:
+                  raise SystemExit(f'Missing hosted symbol: {symbol}')
+
+          for file in ['package.json', 'client/package.json', 'client/package-lock.json', 'hosted/vercel-transport/package.json']:
+              json.loads(Path(file).read_text())
+          PY
+          node --check /tmp/workbench-hosted.js
+
+      - name: Verify source hygiene and package manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git ls-files '*.tsbuildinfo' | grep -q .; then
+            echo 'Tracked TypeScript incremental cache found.' >&2
+            exit 1
+          fi
+          grep -q '^client/package-lock.json$' PACKAGE_MANIFEST.txt
+          grep -q '^client/src/components/WorkspaceHero.tsx$' PACKAGE_MANIFEST.txt
+          grep -q '^.github/workflows/validate-workbench.yml$' PACKAGE_MANIFEST.txt
+          grep -q 'WorkspaceHero' client/src/App.tsx
+          grep -q 'workspace-command-hero' client/src/styles/app.css
+          grep -q "appVersion: '0.8.4'" client/src/lib/userPreferences.ts
+
+  backend:
+    name: ASP.NET build and tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+          cache: true
+          cache-dependency-path: |
+            server/WorkbenchStudio.Api/WorkbenchStudio.Api.csproj
+            tests/WorkbenchStudio.Api.Tests/WorkbenchStudio.Api.Tests.csproj
+
+      - name: Restore solution
+        run: dotnet restore WorkbenchStudio.sln
+
+      - name: Build solution
+        run: dotnet build WorkbenchStudio.sln --configuration Release --no-restore
+
+      - name: Run backend tests
+        run: dotnet test tests/WorkbenchStudio.Api.Tests/WorkbenchStudio.Api.Tests.csproj --configuration Release --no-build --no-restore
