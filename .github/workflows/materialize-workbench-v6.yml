@@ -1,0 +1,41 @@
+name: Materialize Workbench Studio v6 source
+
+on:
+  push:
+    branches:
+      - workbench-studio-v6
+    paths:
+      - '.github/workflows/materialize-workbench-v6.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download and verify source archive
+        shell: bash
+        run: |
+          curl --fail --location --retry 3 --output /tmp/WorkbenchStudio-v6.zip 'https://at.adobe.com/ugz8dEeKdSRGIfyJ'
+          echo "e735dcc7094b46534401e2b11254c6df1f769af3bfab88165dac243d66bcb7b1  /tmp/WorkbenchStudio-v6.zip" | sha256sum --check --strict
+          unzip -q /tmp/WorkbenchStudio-v6.zip -d /tmp/workbench-source
+          test -f /tmp/workbench-source/WorkbenchStudio-v6/README.md
+          test -f /tmp/workbench-source/WorkbenchStudio-v6/WorkbenchStudio.sln
+          test -f /tmp/workbench-source/WorkbenchStudio-v6/client/src/components/OperationsCenter.tsx
+          test -f /tmp/workbench-source/WorkbenchStudio-v6/server/WorkbenchStudio.Api/Endpoints/OperationsEndpoints.cs
+          test -f /tmp/workbench-source/WorkbenchStudio-v6/hosted/index.html
+
+      - name: Materialize repository tree
+        shell: bash
+        run: |
+          rsync -a --delete --exclude='.git/' /tmp/workbench-source/WorkbenchStudio-v6/ ./
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Evolve Workbench Studio to v6 operations"
+          git push origin HEAD:workbench-studio-v6
