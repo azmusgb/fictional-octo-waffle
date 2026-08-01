@@ -14,6 +14,7 @@ client/public/favicon.svg
 client/public/site.webmanifest
 client/src/App.tsx
 client/src/components/ArtifactInspector.tsx
+client/src/components/CommandIntelligenceCenter.tsx
 client/src/components/CommandPalette.tsx
 client/src/components/CompareView.tsx
 client/src/components/DecisionCenter.tsx
@@ -61,6 +62,7 @@ server/WorkbenchStudio.Api/Data/WorkbenchDbContext.cs
 server/WorkbenchStudio.Api/Domain/Contracts.cs
 server/WorkbenchStudio.Api/Domain/Entities.cs
 server/WorkbenchStudio.Api/Endpoints/ArtifactsEndpoints.cs
+server/WorkbenchStudio.Api/Endpoints/CommandIntelligenceEndpoints.cs
 server/WorkbenchStudio.Api/Endpoints/DecisionEndpoints.cs
 server/WorkbenchStudio.Api/Endpoints/ImportsEndpoints.cs
 server/WorkbenchStudio.Api/Endpoints/OperationsEndpoints.cs
@@ -77,6 +79,7 @@ server/WorkbenchStudio.Api/Parsing/XmlArtifactParser.cs
 server/WorkbenchStudio.Api/Program.cs
 server/WorkbenchStudio.Api/Properties/launchSettings.json
 server/WorkbenchStudio.Api/Services/AutomationRecipeWorkerService.cs
+server/WorkbenchStudio.Api/Services/CommandIntelligenceService.cs
 server/WorkbenchStudio.Api/Services/ComparisonService.cs
 server/WorkbenchStudio.Api/Services/DataProfileService.cs
 server/WorkbenchStudio.Api/Services/DatabaseBootstrapper.cs

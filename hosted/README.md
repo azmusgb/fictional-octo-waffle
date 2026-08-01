@@ -1,7 +1,5 @@
-# Workbench Studio v7 hosted experience
+# Workbench Studio v8 hosted adapter
 
-`index.html` is a dependency-free, self-contained demonstration of the complete Workbench Studio v7 workflow. It includes 24 product surfaces and persists demo decisions in browser `localStorage`.
+`index.html` is a self-contained interactive demonstration of all 29 v8 workflow surfaces. It persists demo decisions in browser local storage and never uploads original evidence.
 
-The hosted adapter does not process real evidence unless the user connects the local ASP.NET Core agent. The local agent remains authoritative for immutable imports, SQLite records, watch folders, profiles, lineage, privacy detections, baseline policies, automation recipes, citation-first evidence answers, and decision briefs.
-
-Production uses the Safari-compatible loader in `vercel-transport/`. The loader fetches the complete hosted source from an immutable Git commit and does not use `DecompressionStream`.
+The `vercel-transport` directory contains the Safari-compatible production loader. It is pinned to an immutable source commit after repository release and uses no browser gzip/base64 decoding.

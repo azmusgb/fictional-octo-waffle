@@ -135,6 +135,49 @@ public static class DatabaseBootstrapper
             );
             CREATE INDEX IF NOT EXISTS IX_AutomationRecipes_ProjectId_Enabled_UpdatedAtUtc
                 ON AutomationRecipes (ProjectId, Enabled, UpdatedAtUtc);
+
+
+            CREATE TABLE IF NOT EXISTS QueuePolicies (
+                Id TEXT NOT NULL CONSTRAINT PK_QueuePolicies PRIMARY KEY,
+                ProjectId TEXT NOT NULL,
+                Name TEXT NOT NULL,
+                WeightsJson TEXT NOT NULL,
+                SlaHours INTEGER NOT NULL,
+                Active INTEGER NOT NULL,
+                CreatedAtUtc TEXT NOT NULL,
+                UpdatedAtUtc TEXT NOT NULL
+            );
+            CREATE INDEX IF NOT EXISTS IX_QueuePolicies_ProjectId_Active_UpdatedAtUtc
+                ON QueuePolicies (ProjectId, Active, UpdatedAtUtc);
+
+            CREATE TABLE IF NOT EXISTS ScenarioRuns (
+                Id TEXT NOT NULL CONSTRAINT PK_ScenarioRuns PRIMARY KEY,
+                ProjectId TEXT NOT NULL,
+                ImportSnapshotId TEXT NOT NULL,
+                Name TEXT NOT NULL,
+                AssumptionsJson TEXT NOT NULL,
+                ResultJson TEXT NOT NULL,
+                CreatedAtUtc TEXT NOT NULL
+            );
+            CREATE INDEX IF NOT EXISTS IX_ScenarioRuns_ProjectId_ImportSnapshotId_CreatedAtUtc
+                ON ScenarioRuns (ProjectId, ImportSnapshotId, CreatedAtUtc);
+
+            CREATE TABLE IF NOT EXISTS ApprovalGates (
+                Id TEXT NOT NULL CONSTRAINT PK_ApprovalGates PRIMARY KEY,
+                ProjectId TEXT NOT NULL,
+                ImportSnapshotId TEXT NOT NULL,
+                Name TEXT NOT NULL,
+                GateType TEXT NOT NULL,
+                RequiredRole TEXT NOT NULL,
+                Status TEXT NOT NULL,
+                RequirementsJson TEXT NOT NULL,
+                DecidedBy TEXT NULL,
+                Rationale TEXT NULL,
+                CreatedAtUtc TEXT NOT NULL,
+                DecidedAtUtc TEXT NULL
+            );
+            CREATE INDEX IF NOT EXISTS IX_ApprovalGates_ProjectId_ImportSnapshotId_Status
+                ON ApprovalGates (ProjectId, ImportSnapshotId, Status);
             """, cancellationToken);
     }
 }
