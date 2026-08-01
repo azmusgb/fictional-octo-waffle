@@ -1,0 +1,5 @@
+2026-08-01T12:00:00Z INFO Import service started
+2026-08-01T12:00:01Z WARN records.csv contains an inconsistent row
+2026-08-01T12:00:02Z ERROR Downstream validation failed
+System.InvalidOperationException: Sample validation exception
+2026-08-01T12:00:03Z INFO Import completed with warnings

@@ -1,0 +1,16 @@
+{
+  "name": "Workbench Studio",
+  "short_name": "Workbench",
+  "description": "Local-first evidence operations and artifact investigation shell.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#eef2f6",
+  "theme_color": "#2457d6",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

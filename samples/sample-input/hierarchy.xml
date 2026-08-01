@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<workspace name="Sample Operations Review">
+  <group id="imports">
+    <artifact type="json">project.json</artifact>
+    <artifact type="csv">records.csv</artifact>
+  </group>
+  <group id="evidence">
+    <artifact type="log">service.log</artifact>
+  </group>
+</workspace>
