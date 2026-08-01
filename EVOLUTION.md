@@ -24,3 +24,8 @@ V7 made evidence decisional. V8 makes those decisions operationally commandable:
 ## v8.1 mobile focus
 
 Version 8.1 does not add another workflow domain. It makes the existing command-intelligence product usable on a phone by prioritizing touch navigation, safe-area layout, responsive evidence inspection, card-based review, and bottom-sheet interaction patterns.
+
+
+## v8.2 personal workspace
+
+V8.2 makes the command-intelligence workbench adaptable without weakening its evidence model. User-owned preferences control navigation, dashboard composition, accessibility, queue presentation, alerts, and safe shortcuts. Authoritative evidence, deterministic findings, policy outcomes, and approvals are explicitly outside the preference boundary.

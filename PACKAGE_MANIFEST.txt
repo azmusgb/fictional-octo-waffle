@@ -4,7 +4,6 @@ CHANGELOG.md
 DEPLOYMENT.md
 Directory.Build.props
 EVOLUTION.md
-PACKAGE_MANIFEST.txt
 README.md
 VALIDATION.md
 WorkbenchStudio.sln
@@ -17,6 +16,7 @@ client/src/components/ArtifactInspector.tsx
 client/src/components/CommandIntelligenceCenter.tsx
 client/src/components/CommandPalette.tsx
 client/src/components/CompareView.tsx
+client/src/components/CustomizationCenter.tsx
 client/src/components/DecisionCenter.tsx
 client/src/components/ImportDropzone.tsx
 client/src/components/InventoryExplorer.tsx
@@ -32,6 +32,8 @@ client/src/lib/format.ts
 client/src/lib/insights.test.ts
 client/src/lib/insights.ts
 client/src/lib/types.ts
+client/src/lib/userPreferences.test.ts
+client/src/lib/userPreferences.ts
 client/src/main.tsx
 client/src/styles/app.css
 client/src/vite-env.d.ts

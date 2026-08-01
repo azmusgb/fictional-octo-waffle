@@ -1,4 +1,4 @@
-# Workbench Studio v8.1 validation record
+# Workbench Studio v8.2 validation record
 
 ## Completed in this environment
 
@@ -37,6 +37,7 @@
 - The internal npm registry does not provide the required React packages, so the dependency-backed Vite build and Vitest could not be performed here.
 - `scripts/build.ps1` remains the definitive restore, compile, test, bundle, and publish validation on the development machine.
 
+
 ## v8.1 mobile validation
 
 - Hosted HTML parsed after mobile metadata, navigation, drawer, and card-table changes.
@@ -46,4 +47,16 @@
 - Artifact tree and inspector remain accessible on screens at or below 760 pixels.
 - iOS safe-area, 44-pixel touch-target, and 16-pixel form-control rules are present.
 - Desktop navigation and local-agent APIs remain unchanged.
-- Headless browser screenshot verification was not completed because the container browser could not start reliably; device-level visual verification is not claimed.
+
+
+## v8.2 customization validation
+
+- React customization source passed TypeScript syntax transpilation and strict checking with local React/Vitest compatibility declarations.
+- Hosted HTML parsed successfully after customization overlay, dashboard, quick-action, and navigation changes.
+- Hosted embedded JavaScript passed `node --check`.
+- Preference persistence is versioned and stored separately from evidence, findings, baselines, approvals, and audit state.
+- Mobile tabs are configurable and reorderable with a four-item maximum.
+- Dashboard widgets support persistent visibility and ordering.
+- Display profiles, device theme, text scale, contrast, motion, handedness, queue defaults, alerts, and safe quick actions are persisted.
+- Package JSON and MSBuild XML remain valid.
+- Dependency-backed Vite/Vitest and ASP.NET/xUnit remain development-machine release gates because dependencies and the .NET SDK are unavailable in this environment.

@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.8.2 — 2026-08-01
+
+### Personal workspace customization
+
+- Added a versioned `UserPreferences` model isolated from evidence and governance records.
+- Added configurable and reorderable mobile primary navigation.
+- Added dashboard widget visibility and ordering.
+- Added five display/accessibility profiles, device theme support, text scaling, reduced motion, high contrast, left-handed controls, and approved accents.
+- Added personal queue defaults and alert-delivery rules.
+- Added safe configurable mobile quick actions.
+- Added a complete responsive customization center to the React and hosted experiences.
+
 ## 0.8.1 — 2026-08-01
 
 ### Mobile usability

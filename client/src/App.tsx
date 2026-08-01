@@ -3,6 +3,7 @@ import { ArtifactInspector } from './components/ArtifactInspector';
 import { CommandPalette } from './components/CommandPalette';
 import { CommandIntelligenceCenter } from './components/CommandIntelligenceCenter';
 import { CompareView } from './components/CompareView';
+import { CustomizationCenter } from './components/CustomizationCenter';
 import { DecisionCenter } from './components/DecisionCenter';
 import { ImportDropzone } from './components/ImportDropzone';
 import { InventoryExplorer } from './components/InventoryExplorer';
@@ -16,6 +17,7 @@ import { api } from './lib/api';
 import { formatBytes, formatDate, isActiveImport, progressPercent, severityRank } from './lib/format';
 import { calculateWorkspaceInsights } from './lib/insights';
 import type { AgentStatus, ArtifactListItem, Finding, ImportSummary, ProjectSummary, ViewId } from './lib/types';
+import { ACCENT_COLORS, loadUserPreferences, resetUserPreferences, saveUserPreferences, type QuickActionId, type UserPreferences } from './lib/userPreferences';
 
 const navItems: Array<{ id: ViewId; label: string; symbol: string; description: string }> = [
   { id: 'overview', label: 'Overview', symbol: '⌂', description: 'Health, import, and snapshot intelligence' },
@@ -30,7 +32,6 @@ const navItems: Array<{ id: ViewId; label: string; symbol: string; description: 
   { id: 'system', label: 'System center', symbol: '⚙', description: 'Local agent connection, limits, and diagnostics' },
 ];
 
-const mobilePrimaryViews: ViewId[] = ['overview', 'inventory', 'review', 'command'];
 
 const pageDescriptions: Record<ViewId, string> = {
   overview: 'Monitor snapshot readiness, import new evidence, and understand the structure and risk profile of the current workspace.',
@@ -45,6 +46,16 @@ const pageDescriptions: Record<ViewId, string> = {
   system: 'Verify the local processing agent, inspect its safety envelope, and configure a hosted or same-origin browser shell.',
 };
 
+const quickActionMeta: Record<QuickActionId, { label: string; symbol: string }> = {
+  review: { label: 'Review', symbol: '✓' },
+  findings: { label: 'Findings', symbol: '!' },
+  compare: { label: 'Compare', symbol: '⇄' },
+  command: { label: 'Search', symbol: '⌕' },
+  operations: { label: 'Operations', symbol: '◉' },
+  exports: { label: 'Exports', symbol: '⇩' },
+  customize: { label: 'Customize', symbol: '✦' },
+};
+
 function App() {
   const [projects, setProjects] = useState<ProjectSummary[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(() => localStorage.getItem('ws.project'));
@@ -53,8 +64,9 @@ function App() {
   const [artifacts, setArtifacts] = useState<ArtifactListItem[]>([]);
   const [findings, setFindings] = useState<Finding[]>([]);
   const [selectedArtifactId, setSelectedArtifactId] = useState<string | null>(null);
-  const [view, setView] = useState<ViewId>('overview');
-  const [findingFilter, setFindingFilter] = useState<'All' | 'Error' | 'Warning' | 'Info'>('All');
+  const [preferences, setPreferences] = useState<UserPreferences>(() => loadUserPreferences());
+  const [view, setView] = useState<ViewId>(() => loadUserPreferences().queue.startView);
+  const [findingFilter, setFindingFilter] = useState<'All' | 'Error' | 'Warning' | 'Info'>(() => loadUserPreferences().queue.findingSeverity);
   const [findingSearch, setFindingSearch] = useState('');
   const [loadingProjects, setLoadingProjects] = useState(true);
   const [loadingWorkspace, setLoadingWorkspace] = useState(false);
@@ -67,18 +79,15 @@ function App() {
   const [renameBusy, setRenameBusy] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [customizationOpen, setCustomizationOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [agentStatus, setAgentStatus] = useState<AgentStatus | null>(null);
   const [agentUnavailable, setAgentUnavailable] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>(() =>
-    (localStorage.getItem('ws.theme') as 'light' | 'dark' | null) ??
-    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
-  );
-  const [density, setDensity] = useState<'comfortable' | 'compact'>(() =>
-    (localStorage.getItem('ws.density') as 'comfortable' | 'compact' | null) ?? 'comfortable',
-  );
+  const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>(() => window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
+  const resolvedTheme = preferences.display.theme === 'system' ? systemTheme : preferences.display.theme;
+  const density = preferences.display.density;
   const selectedProject = projects.find((project) => project.id === selectedProjectId) ?? null;
   const selectedImport = imports.find((item) => item.id === selectedImportId) ?? null;
   const insights = useMemo(() => calculateWorkspaceInsights(artifacts, findings), [artifacts, findings]);
@@ -114,14 +123,31 @@ function App() {
   }, []);
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    localStorage.setItem('ws.theme', theme);
-  }, [theme]);
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const update = () => setSystemTheme(media.matches ? 'dark' : 'light');
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
 
   useEffect(() => {
-    document.documentElement.dataset.density = density;
-    localStorage.setItem('ws.density', density);
-  }, [density]);
+    const root = document.documentElement;
+    const accent = ACCENT_COLORS[preferences.display.accent];
+    root.dataset.theme = resolvedTheme;
+    root.dataset.density = density;
+    root.dataset.contrast = preferences.display.highContrast ? 'high' : 'standard';
+    root.dataset.motion = preferences.display.reducedMotion ? 'reduced' : 'full';
+    root.dataset.handed = preferences.display.leftHanded ? 'left' : 'right';
+    root.dataset.profile = preferences.display.profile;
+    root.style.setProperty('--user-text-scale', String(preferences.display.textScale));
+    root.style.setProperty('--accent', accent.base);
+    root.style.setProperty('--accent-strong', resolvedTheme === 'dark' ? accent.base : accent.strong);
+    root.style.setProperty('--accent-soft', resolvedTheme === 'dark' ? `color-mix(in srgb, ${accent.base} 18%, #151e2d)` : accent.soft);
+    saveUserPreferences(preferences);
+  }, [density, preferences, resolvedTheme]);
+
+  useEffect(() => {
+    setFindingFilter(preferences.queue.findingSeverity);
+  }, [preferences.queue.findingSeverity]);
 
   useEffect(() => {
     let cancelled = false;
@@ -217,6 +243,7 @@ function App() {
         setRenameOpen(false);
         setCommandOpen(false);
         setMobileNavOpen(false);
+        setCustomizationOpen(false);
       }
       if (!isTyping && event.key === '/') {
         event.preventDefault();
@@ -246,8 +273,10 @@ function App() {
       return [item.title, item.message, item.ruleId, item.artifactPath ?? '', item.sourceLocation ?? '']
         .some((value) => value.toLowerCase().includes(term));
     });
-    return [...rows].sort((left, right) => severityRank(right.severity) - severityRank(left.severity));
-  }, [findingFilter, findingSearch, findings]);
+    return [...rows].sort((left, right) => preferences.queue.sort === 'newest'
+      ? new Date(right.createdAtUtc).getTime() - new Date(left.createdAtUtc).getTime()
+      : severityRank(right.severity) - severityRank(left.severity));
+  }, [findingFilter, findingSearch, findings, preferences.queue.sort]);
 
   const activeImports = imports.filter((item) => isActiveImport(item.status));
 
@@ -334,7 +363,13 @@ function App() {
     setView(nextView);
     setSelectedArtifactId(null);
     setMobileNavOpen(false);
-    window.requestAnimationFrame(() => document.getElementById('main-content')?.scrollTo({ top: 0, behavior: 'smooth' }));
+    window.requestAnimationFrame(() => document.getElementById('main-content')?.scrollTo({ top: 0, behavior: preferences.display.reducedMotion ? 'auto' : 'smooth' }));
+  }
+
+  function runQuickAction(action: QuickActionId) {
+    if (action === 'command') { setCommandOpen(true); return; }
+    if (action === 'customize') { setCustomizationOpen(true); return; }
+    navigate(action);
   }
 
   function openRenameDialog() {
@@ -358,7 +393,7 @@ function App() {
       <header className="topbar">
         <div className="brand-lockup">
           <div className="brand-mark" aria-hidden="true">W</div>
-          <div><strong>Workbench Studio</strong><span>Mobile command intelligence · v8.1</span></div>
+          <div><strong>Workbench Studio</strong><span>Personal mobile command · v8.2</span></div>
         </div>
 
         <div className="topbar-center">
@@ -377,22 +412,23 @@ function App() {
         <div className="topbar-actions">
           <button type="button" className="secondary-button compact-button" onClick={() => setCreateOpen(true)}>+ New project</button>
           {selectedProject ? <button type="button" className="icon-button" aria-label="Rename current project" title="Rename project" onClick={openRenameDialog}>✎</button> : null}
-          <button type="button" className="icon-button" aria-label={`Use ${density === 'comfortable' ? 'compact' : 'comfortable'} density`} title="Toggle density" onClick={() => setDensity((current) => current === 'comfortable' ? 'compact' : 'comfortable')}>{density === 'comfortable' ? '≡' : '☰'}</button>
-          <button type="button" className="icon-button" aria-label={`Use ${theme === 'light' ? 'dark' : 'light'} theme`} title="Toggle theme" onClick={() => setTheme((current) => current === 'light' ? 'dark' : 'light')}>{theme === 'light' ? '◐' : '☀'}</button>
+          <button type="button" className="icon-button" aria-label="Customize workspace" title="Customize workspace" onClick={() => setCustomizationOpen(true)}>⚙</button>
+          <button type="button" className="icon-button" aria-label={`Use ${density === 'comfortable' ? 'compact' : 'comfortable'} density`} title="Toggle density" onClick={() => setPreferences((current) => ({ ...current, display: { ...current.display, density: current.display.density === 'comfortable' ? 'compact' : 'comfortable', profile: current.display.density === 'comfortable' ? 'dense-review' : 'standard' } }))}>{density === 'comfortable' ? '≡' : '☰'}</button>
+          <button type="button" className="icon-button" aria-label={`Use ${resolvedTheme === 'light' ? 'dark' : 'light'} theme`} title="Toggle theme" onClick={() => setPreferences((current) => ({ ...current, display: { ...current.display, theme: resolvedTheme === 'light' ? 'dark' : 'light' } }))}>{resolvedTheme === 'light' ? '◐' : '☀'}</button>
         </div>
       </header>
 
       <aside className="sidebar" aria-label="Primary navigation">
         <nav>
           {navItems.map((item) => (
-            <button key={item.id} type="button" className={`${view === item.id ? 'nav-item is-active' : 'nav-item'}${mobilePrimaryViews.includes(item.id) ? ' is-mobile-primary' : ''}`} onClick={() => navigate(item.id)} disabled={!selectedProject && item.id !== 'overview' && item.id !== 'system'} aria-current={view === item.id ? 'page' : undefined}>
+            <button key={item.id} type="button" className={`${view === item.id ? 'nav-item is-active' : 'nav-item'}${preferences.mobileTabs.includes(item.id) ? ' is-mobile-primary' : ''}`} onClick={() => navigate(item.id)} disabled={!selectedProject && item.id !== 'overview' && item.id !== 'system'} aria-current={view === item.id ? 'page' : undefined}>
               <span className="nav-symbol" aria-hidden="true">{item.symbol}</span>
               <span><strong>{item.label}</strong><small>{item.description}</small></span>
               {item.id === 'findings' && findings.length > 0 ? <span className="nav-count">{findings.length}</span> : null}
               {item.id === 'review' && artifacts.filter((artifact) => artifact.reviewStatus !== 'Accepted').length > 0 ? <span className="nav-count">{artifacts.filter((artifact) => artifact.reviewStatus !== 'Accepted').length}</span> : null}
             </button>
           ))}
-          <button type="button" className={`nav-item mobile-more-button${mobilePrimaryViews.includes(view) ? '' : ' is-active'}`} onClick={() => setMobileNavOpen(true)} aria-haspopup="dialog" aria-expanded={mobileNavOpen}>
+          <button type="button" className={`nav-item mobile-more-button${preferences.mobileTabs.includes(view) ? '' : ' is-active'}`} onClick={() => setMobileNavOpen(true)} aria-haspopup="dialog" aria-expanded={mobileNavOpen}>
             <span className="nav-symbol" aria-hidden="true">•••</span>
             <span><strong>More</strong><small>All workspaces</small></span>
           </button>
@@ -419,6 +455,10 @@ function App() {
                 <span><strong>{item.label}</strong><small>{item.description}</small></span>
               </button>
             ))}
+            <button type="button" className="mobile-nav-option customization-nav-option" onClick={() => { setMobileNavOpen(false); setCustomizationOpen(true); }}>
+              <span className="nav-symbol" aria-hidden="true">✦</span>
+              <span><strong>Customize</strong><small>Tabs, dashboard, display, alerts, and quick actions</small></span>
+            </button>
           </div>
         </section>
       </div>
@@ -454,26 +494,30 @@ function App() {
               ) : null}
             </section>
 
+            <nav className="mobile-quick-actions" aria-label="Personal quick actions">
+              {preferences.quickActions.map((action) => <button key={action} type="button" onClick={() => runQuickAction(action)}>{quickActionMeta[action].symbol}<span>{quickActionMeta[action].label}</span></button>)}
+            </nav>
+
             {loadingWorkspace && imports.length === 0 ? <div className="panel-loading">Loading project workspace…</div> : null}
 
             {view === 'overview' ? (
               <div className="page-stack">
-                <section className="metrics-grid">
+                {!preferences.dashboard.hidden.includes('metrics') ? <section className="metrics-grid dashboard-widget" style={{ order: preferences.dashboard.order.indexOf('metrics') }}>
                   <MetricCard label="Health score" value={selectedImport ? insights.healthScore : '—'} detail={selectedImport ? insights.healthLabel : 'Import a snapshot'} tone={insights.healthScore >= 75 ? 'success' : insights.healthScore >= 55 ? 'warning' : selectedImport ? 'danger' : 'default'} />
                   <MetricCard label="Parse coverage" value={selectedImport ? `${insights.parseCoveragePercent}%` : '—'} detail={`${insights.parsedCount.toLocaleString()} parsed · ${insights.unsupportedCount.toLocaleString()} unsupported`} tone="success" />
                   <MetricCard label="Findings" value={findings.length.toLocaleString()} detail={`${findings.filter((item) => item.severity === 'Error').length} errors · ${findings.filter((item) => item.severity === 'Warning').length} warnings`} tone={findings.some((item) => item.severity === 'Error') ? 'danger' : findings.length > 0 ? 'warning' : 'default'} />
                   <MetricCard label="Indexed evidence" value={formatBytes(insights.totalBytes)} detail={`${artifacts.length.toLocaleString()} SHA-256 verified artifacts`} />
-                </section>
+                </section> : null}
 
-                {activeImports.map((item) => (
+                {!preferences.dashboard.hidden.includes('processing') ? <div className="dashboard-widget processing-widget" style={{ order: preferences.dashboard.order.indexOf('processing') }}>{activeImports.map((item) => (
                   <section key={item.id} className="processing-card" aria-live="polite">
                     <div className="processing-header"><div><StatusBadge value={item.status} /><strong>{item.displayName}</strong><span>{item.statusMessage}</span></div><button type="button" className="danger-text-button" onClick={() => void cancelImport(item.id)} disabled={item.cancellationRequested}>{item.cancellationRequested ? 'Cancelling…' : 'Cancel'}</button></div>
                     <div className="progress-track" role="progressbar" aria-label={`${item.displayName} progress`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={progressPercent(item.processedFiles, item.totalFiles)}><span style={{ width: `${progressPercent(item.processedFiles, item.totalFiles)}%` }} /></div>
                     <div className="processing-meta"><span>{item.currentStage}</span><span>{item.processedFiles.toLocaleString()} / {item.totalFiles.toLocaleString()} artifacts</span></div>
                   </section>
-                ))}
+                ))}</div> : null}
 
-                <div className="overview-grid">
+                {!preferences.dashboard.hidden.includes('intake') ? <div className="overview-grid dashboard-widget" style={{ order: preferences.dashboard.order.indexOf('intake') }}>
                   <ImportDropzone disabled={!selectedProjectId} busy={importBusy} onImport={createImport} />
                   <section className="surface-card snapshot-card">
                     <div className="section-heading compact-heading"><div><span className="eyebrow">History</span><h2>Import snapshots</h2></div><span className="quiet-label">Newest first</span></div>
@@ -492,15 +536,15 @@ function App() {
                       </div>
                     )}
                   </section>
-                </div>
+                </div> : null}
 
-                {selectedImport ? <WorkspaceInsights insights={insights} artifacts={artifacts} findings={findings} imports={imports} onNavigate={navigate} onInspectArtifact={setSelectedArtifactId} /> : null}
+                {!preferences.dashboard.hidden.includes('insights') && selectedImport ? <div className="dashboard-widget" style={{ order: preferences.dashboard.order.indexOf('insights') }}><WorkspaceInsights insights={insights} artifacts={artifacts} findings={findings} imports={imports} onNavigate={navigate} onInspectArtifact={setSelectedArtifactId} /></div> : null}
               </div>
             ) : null}
 
             {view === 'inventory' ? selectedImport ? <InventoryExplorer artifacts={artifacts} onSelectArtifact={setSelectedArtifactId} /> : <EmptySnapshot title="No snapshot selected" description="Import files or select a snapshot from the overview." /> : null}
 
-            {view === 'review' ? selectedImport ? <ReviewQueue artifacts={artifacts} onInspectArtifact={setSelectedArtifactId} /> : <EmptySnapshot title="No snapshot selected" description="Select a completed import to triage artifact review state." /> : null}
+            {view === 'review' ? selectedImport ? <ReviewQueue artifacts={preferences.queue.hideAccepted ? artifacts.filter((artifact) => artifact.reviewStatus !== 'Accepted') : artifacts} onInspectArtifact={setSelectedArtifactId} /> : <EmptySnapshot title="No snapshot selected" description="Select a completed import to triage artifact review state." /> : null}
 
             {view === 'findings' ? selectedImport ? (
               <div className="page-stack">
@@ -558,6 +602,15 @@ function App() {
 
       {createOpen ? <ProjectDialog mode="create" name={createName} busy={createBusy} onNameChange={setCreateName} onClose={() => setCreateOpen(false)} onSubmit={() => void createProject()} /> : null}
       {renameOpen ? <ProjectDialog mode="rename" name={renameName} busy={renameBusy} onNameChange={setRenameName} onClose={() => setRenameOpen(false)} onSubmit={() => void renameProject()} /> : null}
+
+      <CustomizationCenter
+        open={customizationOpen}
+        preferences={preferences}
+        navigationOptions={navItems}
+        onChange={setPreferences}
+        onClose={() => setCustomizationOpen(false)}
+        onReset={() => { const next = resetUserPreferences(); setPreferences(next); setFindingFilter(next.queue.findingSeverity); setToast('Customization reset to recommended defaults.'); }}
+      />
 
       {toast ? <div className="toast" role="status">{toast}</div> : null}
     </div>
