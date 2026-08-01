@@ -79,7 +79,7 @@ function App() {
   const [renameBusy, setRenameBusy] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const [customizationOpen, setCustomizationOpen] = useState(false);
+  const [customizationOpen, setCustomizationOpen] = useState(() => !loadUserPreferences().onboarding.complete);
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [agentStatus, setAgentStatus] = useState<AgentStatus | null>(null);

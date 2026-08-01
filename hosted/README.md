@@ -8,3 +8,8 @@ The `vercel-transport` directory contains the Safari-compatible production loade
 ## V8.2 customization
 
 The hosted adapter now persists configurable phone tabs, dashboard composition, display/accessibility profiles, queue and alert preferences, and safe quick actions in browser storage. These preferences alter presentation only and do not represent authoritative local-agent decisions.
+
+
+## v8.3 portable workspace
+
+The hosted adapter includes named profiles, guided onboarding, checksum-protected preference transfer, selective import, local diagnostics, category reset, and backup recovery. These browser-local features do not include or mutate evidence and do not claim continuous cloud synchronization.

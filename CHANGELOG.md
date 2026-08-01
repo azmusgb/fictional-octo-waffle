@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.3 — 2026-08-01
+
+### Portable workspace
+
+- Added checksum-protected preference export, share, clipboard transfer, selective import, and preview.
+- Added five named built-in workspace profiles plus user-created profile save, update, apply, and delete.
+- Added guided role onboarding for investigators, reviewers, approvers, operations users, and executives.
+- Added versioned v1-to-v2 preference migration, automatic last-known-good backup, category reset, diagnostics, and recovery.
+- Added a provider-ready sync boundary without claiming cloud synchronization before authenticated storage exists.
+- Preserved the strict separation between user preferences and evidence, findings, policies, approvals, and audit records.
+
 ## 0.8.2 — 2026-08-01
 
 ### Personal workspace customization

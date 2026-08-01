@@ -1,4 +1,4 @@
-# Workbench Studio v8.2
+# Workbench Studio v8.3
 
 Workbench Studio is a local-first evidence operations, investigation, decision-support, and command-intelligence workbench. It combines a React/TypeScript desktop shell, an ASP.NET Core local agent, SQLite metadata, immutable disk-backed evidence, deterministic parsers, human review, continuous intake, quality profiling, impact analysis, transparent decision operations, and accountable executive command workflows.
 
@@ -8,6 +8,18 @@ Production: https://workbench-studio-v8.vercel.app
 
 The hosted adapter uses representative browser-persisted data. Original evidence remains local unless the user explicitly exports or shares it.
 
+
+## Portable workspace v8.3
+
+Version 8.3 makes personal workspace configuration transferable and recoverable without moving authoritative data:
+
+- Checksum-protected JSON export, Web Share support, clipboard transfer, and selective import preview
+- Five built-in role/workflow profiles plus custom named profiles
+- Guided onboarding for investigator, reviewer, approver, operations, and executive workflows
+- Versioned preference migration, automatic backup, diagnostics, category reset, and last-known-good recovery
+- Explicitly disabled continuous cloud sync until an authenticated preference-storage provider is configured
+
+Preference packages never contain original evidence, findings, approval decisions, policies, or audit records.
 
 ## Personal workspace v8.2
 
