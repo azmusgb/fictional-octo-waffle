@@ -1,26 +1,25 @@
-# Workbench Studio v8.1 mobile deployment
+# Workbench Studio v8.2 customization deployment
 
-## Production
+## Production target
 
-- URL: https://workbench-studio-v8.vercel.app
-- Vercel project ID: `prj_0gUJSBVDQs2xuydpQurcpVa7cL27`
-- Production deployment ID: `dpl_95mkTwhKCVJ9VPnVKWr8s8QSWKE2`
-- Immutable application source commit: `0151b03cce091ab320acaa4ee0c5a6984b4192de`
-- Region: `iad1`
+- Existing production URL: https://workbench-studio-v8.vercel.app
+- Existing Vercel project ID: `prj_0gUJSBVDQs2xuydpQurcpVa7cL27`
+- Target release: Workbench Studio v8.2 Personal Workspace
+- Source state: validated release candidate pending immutable GitHub merge
 
 ## Delivery model
 
-The existing v8 production project serves a small Safari-compatible loader. It fetches the complete `hosted/index.html` from the immutable v8.1 source commit above, validates the Workbench Studio v8.1 identity, and replaces the loading document.
+The production project serves a small Safari-compatible loader. After the v8.2 feature merge, the loader will be pinned to the immutable merge commit containing `hosted/index.html`, will validate the Workbench Studio v8.2 identity, and will replace the loading document.
 
-The loader includes `viewport-fit=cover`, Apple standalone-app metadata, and iPhone safe-area padding. It does not use browser base64 decoding, gzip decompression, `atob`, or `DecompressionStream`. Responses use `Cache-Control: no-store, max-age=0` and `X-Content-Type-Options: nosniff`.
+The loader does not use browser base64 decoding, gzip decompression, `atob`, or `DecompressionStream`. Responses remain cache-disabled.
 
-## Verification
+## V8.2 scope
 
-- Deployment state: `READY`
-- Existing production alias returned HTTP 200
-- Loader points to the immutable v8.1 source commit
-- Mobile viewport and safe-area metadata are present
-- No compressed-browser transport is present
-- Vercel runtime-error clusters after deployment: none detected
+- Configurable mobile primary navigation
+- Dashboard widget visibility and ordering
+- Display and accessibility profiles
+- Personal queue and alert preferences
+- Safe configurable quick actions
+- Versioned browser preference persistence isolated from authoritative evidence and decision data
 
-The hosted application uses representative browser-persisted data until connected to the local ASP.NET Core agent. Real evidence processing, persistence, approvals, scenarios, and exports remain local-agent responsibilities.
+Final deployment ID, immutable source commit, readiness status, and runtime verification will be recorded after production deployment.
