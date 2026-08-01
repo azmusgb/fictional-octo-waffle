@@ -54,7 +54,7 @@ jobs:
           python -m json.tool client/package.json >/dev/null
           python -m json.tool hosted/vercel-transport/package.json >/dev/null
           grep -q 'version: 2' client/src/lib/userPreferences.ts
-          grep -q 'checksum-protected' README.md
+          grep -qi 'checksum-protected' README.md
 
       - name: Commit materialized source
         shell: bash
