@@ -4,7 +4,6 @@ CHANGELOG.md
 DEPLOYMENT.md
 Directory.Build.props
 EVOLUTION.md
-PACKAGE_MANIFEST.txt
 README.md
 VALIDATION.md
 WorkbenchStudio.sln
@@ -19,6 +18,7 @@ client/src/components/CompareView.tsx
 client/src/components/ImportDropzone.tsx
 client/src/components/InventoryExplorer.tsx
 client/src/components/MetricCard.tsx
+client/src/components/OperationsCenter.tsx
 client/src/components/ReviewQueue.tsx
 client/src/components/StatusBadge.tsx
 client/src/components/SystemCenter.tsx
@@ -73,6 +73,7 @@ server/WorkbenchStudio.Api/Domain/Contracts.cs
 server/WorkbenchStudio.Api/Domain/Entities.cs
 server/WorkbenchStudio.Api/Endpoints/ArtifactsEndpoints.cs
 server/WorkbenchStudio.Api/Endpoints/ImportsEndpoints.cs
+server/WorkbenchStudio.Api/Endpoints/OperationsEndpoints.cs
 server/WorkbenchStudio.Api/Endpoints/ProjectsEndpoints.cs
 server/WorkbenchStudio.Api/Endpoints/SystemEndpoints.cs
 server/WorkbenchStudio.Api/Parsing/CsvArtifactParser.cs
@@ -86,6 +87,7 @@ server/WorkbenchStudio.Api/Parsing/XmlArtifactParser.cs
 server/WorkbenchStudio.Api/Program.cs
 server/WorkbenchStudio.Api/Properties/launchSettings.json
 server/WorkbenchStudio.Api/Services/ComparisonService.cs
+server/WorkbenchStudio.Api/Services/DataProfileService.cs
 server/WorkbenchStudio.Api/Services/DatabaseBootstrapper.cs
 server/WorkbenchStudio.Api/Services/DtoMapper.cs
 server/WorkbenchStudio.Api/Services/ExportService.cs
@@ -94,7 +96,11 @@ server/WorkbenchStudio.Api/Services/HashingService.cs
 server/WorkbenchStudio.Api/Services/ImportProcessor.cs
 server/WorkbenchStudio.Api/Services/ImportQueue.cs
 server/WorkbenchStudio.Api/Services/ImportWorkerService.cs
+server/WorkbenchStudio.Api/Services/LineageService.cs
+server/WorkbenchStudio.Api/Services/PlaybookService.cs
+server/WorkbenchStudio.Api/Services/PrivacyService.cs
 server/WorkbenchStudio.Api/Services/ProjectManifestService.cs
+server/WorkbenchStudio.Api/Services/WatchFolderService.cs
 server/WorkbenchStudio.Api/Services/WorkspaceOptions.cs
 server/WorkbenchStudio.Api/WorkbenchStudio.Api.csproj
 server/WorkbenchStudio.Api/appsettings.json

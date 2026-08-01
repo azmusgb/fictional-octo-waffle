@@ -10,6 +10,12 @@ import type {
   ProjectSummary,
   ReviewStatus,
   SearchResult,
+  WatchFolder,
+  DataProfile,
+  LineageEdge,
+  PrivacyDetection,
+  Playbook,
+  PlaybookStep,
 } from './types';
 
 export class ApiError extends Error {
@@ -101,4 +107,22 @@ export const api = {
   exportUrl: (projectId: string, importId: string, format: 'json' | 'csv' | 'html') =>
     url(`/api/projects/${projectId}/imports/${importId}/export/${format}`),
   projectManifestUrl: (projectId: string) => url(`/api/projects/${projectId}/manifest`),
+  getWatchFolders: (projectId: string) => request<WatchFolder[]>(`/api/projects/${projectId}/watch-folders`),
+  createWatchFolder: (projectId: string, input: { name: string; folderPath: string; triggerMode: string; scanIntervalMinutes: number; ignorePatterns: string[]; requireApproval: boolean }) =>
+    request<WatchFolder>(`/api/projects/${projectId}/watch-folders`, { method: 'POST', body: JSON.stringify(input) }),
+  updateWatchFolder: (projectId: string, watchFolderId: string, input: Partial<{ name: string; enabled: boolean; triggerMode: string; scanIntervalMinutes: number; ignorePatterns: string[]; requireApproval: boolean }>) =>
+    request<WatchFolder>(`/api/projects/${projectId}/watch-folders/${watchFolderId}`, { method: 'PATCH', body: JSON.stringify(input) }),
+  scanWatchFolder: (projectId: string, watchFolderId: string, force = true) =>
+    request<{ changed: boolean; importId: string | null; message: string; fileCount: number; totalBytes: number }>(`/api/projects/${projectId}/watch-folders/${watchFolderId}/scan?force=${force}`, { method: 'POST' }),
+  runProfiles: (projectId: string, importId: string) => request<{ profiledArtifacts: number }>(`/api/projects/${projectId}/imports/${importId}/profiles/run`, { method: 'POST' }),
+  getProfiles: (projectId: string, importId: string) => request<DataProfile[]>(`/api/projects/${projectId}/imports/${importId}/profiles`),
+  rebuildLineage: (projectId: string, importId: string) => request<{ edges: number }>(`/api/projects/${projectId}/imports/${importId}/lineage/rebuild`, { method: 'POST' }),
+  getLineage: (projectId: string, importId: string) => request<LineageEdge[]>(`/api/projects/${projectId}/imports/${importId}/lineage`),
+  runPrivacyScan: (projectId: string, importId: string) => request<{ detections: number }>(`/api/projects/${projectId}/imports/${importId}/privacy/scan`, { method: 'POST' }),
+  getPrivacyDetections: (projectId: string, importId: string) => request<PrivacyDetection[]>(`/api/projects/${projectId}/imports/${importId}/privacy`),
+  updatePrivacyDetection: (projectId: string, importId: string, detectionId: string, status: 'Open' | 'Confirmed' | 'Dismissed' | 'Redacted') => request<{ id: string; status: string }>(`/api/projects/${projectId}/imports/${importId}/privacy/${detectionId}`, { method: 'PATCH', body: JSON.stringify({ status }) }),
+  redactedExportUrl: (projectId: string, importId: string) => url(`/api/projects/${projectId}/imports/${importId}/privacy/redacted-export`),
+  getPlaybooks: (projectId: string) => request<Playbook[]>(`/api/projects/${projectId}/playbooks`),
+  createPlaybook: (projectId: string, input: { name: string; description: string; steps: PlaybookStep[] }) => request<Playbook>(`/api/projects/${projectId}/playbooks`, { method: 'POST', body: JSON.stringify(input) }),
+  runPlaybook: (projectId: string, playbookId: string, importId: string) => request<Playbook>(`/api/projects/${projectId}/playbooks/${playbookId}/run/${importId}`, { method: 'POST' }),
 };

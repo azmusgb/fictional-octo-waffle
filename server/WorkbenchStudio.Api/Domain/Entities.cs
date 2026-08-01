@@ -135,3 +135,91 @@ public sealed class ArtifactReviewEntity
     public string? TagsJson { get; set; }
     public DateTimeOffset UpdatedAtUtc { get; set; }
 }
+
+public enum WatchTriggerMode
+{
+    Manual,
+    Hourly,
+    Daily
+}
+
+public enum PlaybookRunStatus
+{
+    Ready,
+    Running,
+    Completed,
+    CompletedWithWarnings,
+    Failed
+}
+
+public sealed class WatchFolderEntity
+{
+    public Guid Id { get; set; }
+    public Guid ProjectId { get; set; }
+    public required string Name { get; set; }
+    public required string FolderPath { get; set; }
+    public bool Enabled { get; set; } = true;
+    public WatchTriggerMode TriggerMode { get; set; } = WatchTriggerMode.Manual;
+    public int ScanIntervalMinutes { get; set; } = 60;
+    public string IgnorePatternsJson { get; set; } = "[]";
+    public bool RequireApproval { get; set; }
+    public string? LastFingerprint { get; set; }
+    public DateTimeOffset? LastScannedAtUtc { get; set; }
+    public Guid? LastImportId { get; set; }
+    public DateTimeOffset CreatedAtUtc { get; set; }
+    public DateTimeOffset UpdatedAtUtc { get; set; }
+}
+
+public sealed class DataProfileEntity
+{
+    public Guid Id { get; set; }
+    public Guid ProjectId { get; set; }
+    public Guid ImportSnapshotId { get; set; }
+    public Guid ArtifactId { get; set; }
+    public required string ProfileType { get; set; }
+    public required string MetricsJson { get; set; }
+    public required string IssuesJson { get; set; }
+    public DateTimeOffset CreatedAtUtc { get; set; }
+}
+
+public sealed class LineageEdgeEntity
+{
+    public Guid Id { get; set; }
+    public Guid ProjectId { get; set; }
+    public Guid ImportSnapshotId { get; set; }
+    public Guid FromArtifactId { get; set; }
+    public Guid? ToArtifactId { get; set; }
+    public required string EdgeType { get; set; }
+    public required string Label { get; set; }
+    public string? EvidenceJson { get; set; }
+    public DateTimeOffset CreatedAtUtc { get; set; }
+}
+
+public sealed class PrivacyDetectionEntity
+{
+    public Guid Id { get; set; }
+    public Guid ProjectId { get; set; }
+    public Guid ImportSnapshotId { get; set; }
+    public Guid ArtifactId { get; set; }
+    public required string Kind { get; set; }
+    public required string Severity { get; set; }
+    public required string SourceLocation { get; set; }
+    public required string MaskedPreview { get; set; }
+    public string Status { get; set; } = "Open";
+    public DateTimeOffset CreatedAtUtc { get; set; }
+}
+
+public sealed class PlaybookEntity
+{
+    public Guid Id { get; set; }
+    public Guid ProjectId { get; set; }
+    public required string Name { get; set; }
+    public required string Description { get; set; }
+    public required string StepsJson { get; set; }
+    public PlaybookRunStatus Status { get; set; } = PlaybookRunStatus.Ready;
+    public int ProgressPercent { get; set; }
+    public string? LastRunSummary { get; set; }
+    public DateTimeOffset? LastRunAtUtc { get; set; }
+    public DateTimeOffset CreatedAtUtc { get; set; }
+    public DateTimeOffset UpdatedAtUtc { get; set; }
+}

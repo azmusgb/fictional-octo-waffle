@@ -1,7 +1,5 @@
-# Hosted v5 adapter
+# Workbench Studio v6 hosted experience
 
-`index.html` is the complete dependency-free hosted experience. It runs in demo mode and stores cases, evidence pins, hypotheses, tasks, queries, validation rules, review decisions, saved views, activity, tour state, focus mode, theme, density, and connection preference in browser `localStorage`.
+`index.html` is a dependency-free interactive product experience with representative evidence and browser-persisted state. Version 6 adds agent onboarding, watch folders, profiling, lineage and impact, playbooks, privacy classification, and redacted-export workflows.
 
-Production: https://workbench-studio-v5.vercel.app
-
-`vercel-transport/` contains the reproducible chunked gzip/base64 representation used to deploy the source through a connector with inline payload limits. The normal development artifact remains `index.html`.
+Real files, SQLite persistence, scheduled watches, parsing, profile generation, privacy detection, lineage persistence, and production exports require the ASP.NET Core local agent.

@@ -123,3 +123,75 @@ public sealed record WorkspaceLimitsDto(
     long MaximumExtractedBytes,
     int MaximumExtractedFiles,
     double MaximumCompressionRatio);
+
+public sealed record CreateWatchFolderRequest(
+    string Name,
+    string FolderPath,
+    string TriggerMode,
+    int? ScanIntervalMinutes,
+    IReadOnlyList<string>? IgnorePatterns,
+    bool RequireApproval);
+
+public sealed record UpdateWatchFolderRequest(
+    string? Name,
+    bool? Enabled,
+    string? TriggerMode,
+    int? ScanIntervalMinutes,
+    IReadOnlyList<string>? IgnorePatterns,
+    bool? RequireApproval);
+
+public sealed record WatchFolderDto(
+    Guid Id,
+    Guid ProjectId,
+    string Name,
+    string FolderPath,
+    bool Enabled,
+    string TriggerMode,
+    int ScanIntervalMinutes,
+    IReadOnlyList<string> IgnorePatterns,
+    bool RequireApproval,
+    DateTimeOffset? LastScannedAtUtc,
+    Guid? LastImportId);
+
+public sealed record CreatePlaybookRequest(string Name, string Description, IReadOnlyList<PlaybookStepDto> Steps);
+public sealed record PlaybookStepDto(string Id, string Name, string Type, bool Required, JsonElement? Configuration);
+public sealed record PlaybookDto(
+    Guid Id,
+    Guid ProjectId,
+    string Name,
+    string Description,
+    IReadOnlyList<PlaybookStepDto> Steps,
+    string Status,
+    int ProgressPercent,
+    string? LastRunSummary,
+    DateTimeOffset? LastRunAtUtc);
+
+public sealed record DataProfileDto(
+    Guid Id,
+    Guid ArtifactId,
+    string ArtifactPath,
+    string ProfileType,
+    JsonElement Metrics,
+    JsonElement Issues,
+    DateTimeOffset CreatedAtUtc);
+
+public sealed record PrivacyDetectionDto(
+    Guid Id,
+    Guid ArtifactId,
+    string ArtifactPath,
+    string Kind,
+    string Severity,
+    string SourceLocation,
+    string MaskedPreview,
+    string Status);
+
+public sealed record LineageEdgeDto(
+    Guid Id,
+    Guid FromArtifactId,
+    string FromPath,
+    Guid? ToArtifactId,
+    string? ToPath,
+    string EdgeType,
+    string Label,
+    JsonElement? Evidence);
+public sealed record UpdatePrivacyDetectionRequest(string Status);
