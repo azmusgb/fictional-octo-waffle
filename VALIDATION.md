@@ -1,4 +1,4 @@
-# Workbench Studio v8 validation record
+# Workbench Studio v8.1 validation record
 
 ## Completed in this environment
 
@@ -17,14 +17,16 @@
 
 ## Connected delivery verification
 
-- Source pull request: `#6`.
-- Immutable application source commit: `f9d63a0cb83a97537dd09171170f0b3986ffd980`.
+- Mobile source pull request: `#8`.
+- Immutable mobile application source commit: `0151b03cce091ab320acaa4ee0c5a6984b4192de`.
 - Vercel project: `workbench-studio-v8`.
 - Vercel project ID: `prj_0gUJSBVDQs2xuydpQurcpVa7cL27`.
-- Production deployment: `dpl_6LM9RxirhwEkqiW4SmftxYTVCb2V`.
+- Production deployment: `dpl_95mkTwhKCVJ9VPnVKWr8s8QSWKE2`.
 - Production state: `READY`.
 - Production alias: https://workbench-studio-v8.vercel.app
 - Production response: HTTP 200.
+- Existing clean production alias retained.
+- `viewport-fit=cover`, Apple web-app metadata, and safe-area loader padding confirmed.
 - Response cache policy: `no-store, max-age=0`.
 - Browser gzip/base64 decoding, `atob`, and `DecompressionStream`: absent.
 - Runtime error clusters after deployment: none detected.
@@ -35,7 +37,6 @@
 - The internal npm registry does not provide the required React packages, so the dependency-backed Vite build and Vitest could not be performed here.
 - `scripts/build.ps1` remains the definitive restore, compile, test, bundle, and publish validation on the development machine.
 
-
 ## v8.1 mobile validation
 
 - Hosted HTML parsed after mobile metadata, navigation, drawer, and card-table changes.
@@ -45,3 +46,4 @@
 - Artifact tree and inspector remain accessible on screens at or below 760 pixels.
 - iOS safe-area, 44-pixel touch-target, and 16-pixel form-control rules are present.
 - Desktop navigation and local-agent APIs remain unchanged.
+- Headless browser screenshot verification was not completed because the container browser could not start reliably; device-level visual verification is not claimed.
