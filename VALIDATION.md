@@ -33,9 +33,10 @@
 
 ## Environmental limits
 
-- The .NET SDK is not installed in this execution environment, so ASP.NET compilation and xUnit execution could not be performed here.
-- The internal npm registry does not provide the required React packages, so the dependency-backed Vite build and Vitest could not be performed here.
-- `scripts/build.ps1` remains the definitive restore, compile, test, bundle, and publish validation on the development machine.
+- The .NET SDK is not installed in the interactive execution environment, so local ASP.NET compilation and xUnit execution were unavailable there.
+- The interactive environment's internal npm registry did not provide the required React packages, so local dependency-backed Vite and Vitest execution was unavailable there.
+- GitHub Actions subsequently completed the dependency-backed frontend and backend release gates documented below.
+- `scripts/build.ps1` remains the definitive local development-machine restore, compile, test, bundle, and publish workflow.
 
 ## v8.1 mobile validation
 
@@ -57,7 +58,7 @@
 - Dashboard widgets support persistent visibility and ordering.
 - Display profiles, device theme, text scale, contrast, motion, handedness, queue defaults, alerts, and safe quick actions are persisted.
 - Package JSON and MSBuild XML remain valid.
-- Dependency-backed Vite/Vitest and ASP.NET/xUnit remain development-machine release gates because dependencies and the .NET SDK are unavailable in this environment.
+- Dependency-backed Vite/Vitest and ASP.NET/xUnit remained development-machine release gates for that release.
 
 ## v8.2 connected delivery verification
 
@@ -103,6 +104,7 @@
 - Loader source is pinned to the immutable v8.3 merge commit.
 - Browser gzip/base64 decoding, `atob`, and `DecompressionStream`: absent.
 - Runtime error clusters after deployment: none detected.
+
 ## v8.4 rich-experience validation
 
 - React source adds a decision-posture hero with dynamic health, open-risk, coverage, review, snapshot, and active-profile context.
@@ -110,9 +112,37 @@
 - Portable Workspace exposes profile, onboarding, transfer, and recovery state before progressive-detail tabs.
 - Hosted and React surfaces share the same experience hierarchy and local-first trust language.
 - Embedded hosted JavaScript passed `node --check`.
-- React source passed strict TypeScript checking with local compatibility declarations.
+- React source passed strict TypeScript checking with local compatibility declarations before materialization.
 - JSON package files parsed successfully.
 - Mobile layouts collapse hero actions, control deck, summary cards, and portable navigation without horizontal dependency.
 - Reduced-motion behavior disables ambient node animation and nonessential surface transitions.
-- No evidence, parser, SQLite, policy, approval, or audit-record behavior was changed.
+- Parser-loop corrections preserve the existing parsing model while satisfying .NET 10 async analyzer rules.
+- Authoritative evidence, policy, approval, and audit-record boundaries remain unchanged.
 
+## v8.4 exact-head and production verification
+
+- Source pull request: `#12`.
+- Materialization payload SHA-256: `350a2013c252cf0944c1f0c0f414812e1adf3395fc0dc7a5e67c7f06d76b21ee`.
+- GitHub materialization workflow run: `30722761636`.
+- Successful exact-head validation workflow run: `30723130496`.
+- Deterministic frontend install used the committed `client/package-lock.json`.
+- Production Vite build completed successfully.
+- Vitest frontend tests completed successfully.
+- Hosted HTML, required v8.4 symbols, and embedded JavaScript validation completed successfully.
+- NuGet restore completed without the prior SQLite vulnerability failure after pinning `SQLitePCLRaw.bundle_e_sqlite3` 2.1.12.
+- ASP.NET Release build completed successfully under .NET SDK 10.0.302.
+- xUnit backend tests completed successfully.
+- Generated TypeScript incremental cache files are ignored and absent from the source tree.
+- Immutable application source commit: `8dc6a943cbcd845880885357fc687c7c22e7bb18`.
+- Production loader commit: `1af35920894a39ecef8ed8627bef8507c9c975b5`.
+- Vercel project: `workbench-studio-v8`.
+- Vercel project ID: `prj_0gUJSBVDQs2xuydpQurcpVa7cL27`.
+- Production deployment: `dpl_GVEGfk2QqQPdWnuKiNycpoRUejac`.
+- Production state: `READY`.
+- Production alias: https://workbench-studio-v8.vercel.app
+- Production response: HTTP 200.
+- Response cache policy: `no-store, max-age=0`.
+- `X-Content-Type-Options: nosniff` is present.
+- Loader source is pinned to the immutable v8.4 application commit.
+- Browser gzip/base64 decoding, `atob`, and `DecompressionStream`: absent.
+- Runtime error clusters after deployment: none detected.
