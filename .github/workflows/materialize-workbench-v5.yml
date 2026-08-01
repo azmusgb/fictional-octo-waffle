@@ -5,7 +5,6 @@ on:
     branches:
       - workbench-studio-v5-source
     paths:
-      - 'repo-payload/**'
       - '.github/workflows/materialize-workbench-v5.yml'
 
 permissions:
@@ -19,36 +18,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check source payload
-        id: payload
+      - name: Download and verify source archive
         shell: bash
         run: |
-          required=(part00.b64 part01.b64 part02.b64 tail00.b64 tail01.b64 tail02.b64 tail03.b64 tail04.b64 tail05.b64 tail06.b64)
-          missing=0
-          for file in "${required[@]}"; do
-            if [ ! -f "repo-payload/$file" ]; then
-              echo "Missing repo-payload/$file"
-              missing=$((missing + 1))
-            fi
-          done
-          echo "missing=$missing" >> "$GITHUB_OUTPUT"
-
-      - name: Reconstruct and verify source archive
-        if: steps.payload.outputs.missing == '0'
-        shell: bash
-        run: |
-          cat \
-            repo-payload/part00.b64 \
-            repo-payload/part01.b64 \
-            repo-payload/part02.b64 \
-            repo-payload/tail00.b64 \
-            repo-payload/tail01.b64 \
-            repo-payload/tail02.b64 \
-            repo-payload/tail03.b64 \
-            repo-payload/tail04.b64 \
-            repo-payload/tail05.b64 \
-            repo-payload/tail06.b64 \
-            | base64 --decode > /tmp/WorkbenchStudio-v5.zip
+          curl --fail --location --retry 3 --output /tmp/WorkbenchStudio-v5.zip 'https://at.adobe.com/YAezN35ioWTKLJdZ'
           echo "5836788f1ee39dfe3dc67d978e916bdc34f38e979707961b205b933b7d78d630  /tmp/WorkbenchStudio-v5.zip" | sha256sum --check --strict
           unzip -q /tmp/WorkbenchStudio-v5.zip -d /tmp/workbench-source
           test -f /tmp/workbench-source/WorkbenchStudio-v5/README.md
@@ -57,7 +30,6 @@ jobs:
           test -f /tmp/workbench-source/WorkbenchStudio-v5/server/WorkbenchStudio.Api/Program.cs
 
       - name: Materialize repository tree
-        if: steps.payload.outputs.missing == '0'
         shell: bash
         run: |
           rsync -a --delete --exclude='.git/' /tmp/workbench-source/WorkbenchStudio-v5/ ./
