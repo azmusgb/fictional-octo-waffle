@@ -4,7 +4,9 @@ Workbench Studio is a local-first evidence operations, investigation, decision-s
 
 ## Hosted experience
 
-Production deployment is recorded in `DEPLOYMENT.md` after release. The hosted adapter uses representative browser-persisted data. Original evidence remains local unless the user explicitly exports or shares it.
+Production: https://workbench-studio-v8.vercel.app
+
+The hosted adapter uses representative browser-persisted data. Original evidence remains local unless the user explicitly exports or shares it.
 
 ## v8 product loop
 
