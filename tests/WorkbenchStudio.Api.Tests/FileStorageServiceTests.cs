@@ -18,8 +18,8 @@ public sealed class FileStorageServiceTests : IDisposable
 
         var result = service.GetSafeDestination(root, "folder/data.json");
 
-        Assert.True(result.StartsWith(Path.GetFullPath(root), StringComparison.OrdinalIgnoreCase));
-        Assert.True(result.EndsWith(Path.Combine("folder", "data.json"), StringComparison.OrdinalIgnoreCase));
+        Assert.StartsWith(Path.GetFullPath(root), result, StringComparison.OrdinalIgnoreCase);
+        Assert.EndsWith(Path.Combine("folder", "data.json"), result, StringComparison.OrdinalIgnoreCase);
     }
 
     [Theory]
