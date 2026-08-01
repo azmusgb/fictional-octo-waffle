@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.8.1 — 2026-08-01
+
+### Mobile usability
+
+- Replaced overloaded mobile navigation with four primary tabs and an all-workspaces bottom sheet.
+- Added iPhone safe-area handling, standalone-app metadata, and 44-pixel minimum touch targets.
+- Added mobile evidence-tree and inspector drawers instead of hiding those capabilities.
+- Converted hosted review and query tables into readable mobile cards.
+- Added full-width mobile dialogs, command palette, sticky action areas, and no-zoom form controls.
+- Improved mobile stacking for command queues, scenarios, approvals, explainability, operations, and executive briefings.
+- Preserved the full desktop and local-agent architecture without backend schema changes.
+
 ## 0.8.0 — 2026-08-01
 
 ### Command intelligence

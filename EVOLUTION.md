@@ -19,3 +19,8 @@ V7 made evidence decisional. V8 makes those decisions operationally commandable:
 - **Approval is enforced:** required controls are evaluated by the API, not only the UI.
 - **Explanations are structured:** observed facts remain distinct from expectations and recommendations.
 - **Leadership summaries remain traceable:** executive claims link back to command priorities and immutable evidence.
+
+
+## v8.1 mobile focus
+
+Version 8.1 does not add another workflow domain. It makes the existing command-intelligence product usable on a phone by prioritizing touch navigation, safe-area layout, responsive evidence inspection, card-based review, and bottom-sheet interaction patterns.

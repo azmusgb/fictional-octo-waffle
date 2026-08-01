@@ -30,6 +30,8 @@ const navItems: Array<{ id: ViewId; label: string; symbol: string; description: 
   { id: 'system', label: 'System center', symbol: '⚙', description: 'Local agent connection, limits, and diagnostics' },
 ];
 
+const mobilePrimaryViews: ViewId[] = ['overview', 'inventory', 'review', 'command'];
+
 const pageDescriptions: Record<ViewId, string> = {
   overview: 'Monitor snapshot readiness, import new evidence, and understand the structure and risk profile of the current workspace.',
   inventory: 'Filter or traverse the artifact hierarchy, inspect parser output, and trace every finding back to source content.',
@@ -64,6 +66,7 @@ function App() {
   const [renameName, setRenameName] = useState('');
   const [renameBusy, setRenameBusy] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [agentStatus, setAgentStatus] = useState<AgentStatus | null>(null);
@@ -213,6 +216,7 @@ function App() {
         setCreateOpen(false);
         setRenameOpen(false);
         setCommandOpen(false);
+        setMobileNavOpen(false);
       }
       if (!isTyping && event.key === '/') {
         event.preventDefault();
@@ -228,6 +232,11 @@ function App() {
     const timer = window.setTimeout(() => setToast(null), 3500);
     return () => window.clearTimeout(timer);
   }, [toast]);
+
+  useEffect(() => {
+    document.body.classList.toggle('mobile-nav-open', mobileNavOpen);
+    return () => document.body.classList.remove('mobile-nav-open');
+  }, [mobileNavOpen]);
 
   const filteredFindings = useMemo(() => {
     const term = findingSearch.trim().toLowerCase();
@@ -324,6 +333,8 @@ function App() {
   function navigate(nextView: ViewId) {
     setView(nextView);
     setSelectedArtifactId(null);
+    setMobileNavOpen(false);
+    window.requestAnimationFrame(() => document.getElementById('main-content')?.scrollTo({ top: 0, behavior: 'smooth' }));
   }
 
   function openRenameDialog() {
@@ -347,7 +358,7 @@ function App() {
       <header className="topbar">
         <div className="brand-lockup">
           <div className="brand-mark" aria-hidden="true">W</div>
-          <div><strong>Workbench Studio</strong><span>Command intelligence · v8</span></div>
+          <div><strong>Workbench Studio</strong><span>Mobile command intelligence · v8.1</span></div>
         </div>
 
         <div className="topbar-center">
@@ -374,13 +385,17 @@ function App() {
       <aside className="sidebar" aria-label="Primary navigation">
         <nav>
           {navItems.map((item) => (
-            <button key={item.id} type="button" className={view === item.id ? 'nav-item is-active' : 'nav-item'} onClick={() => navigate(item.id)} disabled={!selectedProject && item.id !== 'overview' && item.id !== 'system'} aria-current={view === item.id ? 'page' : undefined}>
+            <button key={item.id} type="button" className={`${view === item.id ? 'nav-item is-active' : 'nav-item'}${mobilePrimaryViews.includes(item.id) ? ' is-mobile-primary' : ''}`} onClick={() => navigate(item.id)} disabled={!selectedProject && item.id !== 'overview' && item.id !== 'system'} aria-current={view === item.id ? 'page' : undefined}>
               <span className="nav-symbol" aria-hidden="true">{item.symbol}</span>
               <span><strong>{item.label}</strong><small>{item.description}</small></span>
               {item.id === 'findings' && findings.length > 0 ? <span className="nav-count">{findings.length}</span> : null}
               {item.id === 'review' && artifacts.filter((artifact) => artifact.reviewStatus !== 'Accepted').length > 0 ? <span className="nav-count">{artifacts.filter((artifact) => artifact.reviewStatus !== 'Accepted').length}</span> : null}
             </button>
           ))}
+          <button type="button" className={`nav-item mobile-more-button${mobilePrimaryViews.includes(view) ? '' : ' is-active'}`} onClick={() => setMobileNavOpen(true)} aria-haspopup="dialog" aria-expanded={mobileNavOpen}>
+            <span className="nav-symbol" aria-hidden="true">•••</span>
+            <span><strong>More</strong><small>All workspaces</small></span>
+          </button>
         </nav>
         <div className="shortcut-guide">
           <span>Keyboard</span>
@@ -393,6 +408,20 @@ function App() {
           <small>{agentUnavailable ? 'Open System Center to configure the connection.' : 'Original artifacts remain on this device.'}</small>
         </div>
       </aside>
+
+      <div className={`mobile-nav-backdrop${mobileNavOpen ? ' is-open' : ''}`} role="presentation" onMouseDown={(event: ReactMouseEvent<HTMLDivElement>) => { if (event.target === event.currentTarget) setMobileNavOpen(false); }}>
+        <section className="mobile-nav-sheet" role="dialog" aria-modal="true" aria-label="All Workbench workspaces">
+          <header><div><span className="eyebrow">Mobile navigation</span><h2>All workspaces</h2></div><button type="button" className="icon-button" aria-label="Close navigation" onClick={() => setMobileNavOpen(false)}>×</button></header>
+          <div className="mobile-nav-grid">
+            {navItems.map((item) => (
+              <button key={item.id} type="button" className={view === item.id ? 'mobile-nav-option is-active' : 'mobile-nav-option'} onClick={() => navigate(item.id)} disabled={!selectedProject && item.id !== 'overview' && item.id !== 'system'}>
+                <span className="nav-symbol" aria-hidden="true">{item.symbol}</span>
+                <span><strong>{item.label}</strong><small>{item.description}</small></span>
+              </button>
+            ))}
+          </div>
+        </section>
+      </div>
 
       <main className="main-workspace" id="main-content">
         {error ? <div className="global-error" role="alert"><div><strong>Workbench action failed</strong><span>{error}</span></div><button type="button" className="icon-button" aria-label="Dismiss error" onClick={() => setError(null)}>×</button></div> : null}
