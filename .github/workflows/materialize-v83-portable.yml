@@ -22,8 +22,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl -fL --retry 3 --retry-delay 2 -o /tmp/v83.zip 'https://at.adobe.com/FZopzngLjZj1LrKs'
-          echo 'f0f1e327d55483bf9a325da941c3fed7cd76ef004e93472aaa3745ea0ae439e3  /tmp/v83.zip' | sha256sum -c -
+          curl -fL --retry 3 --retry-delay 2 -o /tmp/v83.zip 'https://at.adobe.com/rN4jTT3uOlongPaB'
+          echo 'b400262946266e05b2ecdfc9d884aeac8fd74aab0bfc1c6d1c519b82988aea3d  /tmp/v83.zip' | sha256sum -c -
           rm -rf .v83payload
           unzip -q /tmp/v83.zip -d .v83payload
 
