@@ -47,7 +47,7 @@ public static class SystemEndpoints
         return Results.Ok(new AgentStatusDto(
             "Healthy",
             "Workbench Studio Local Agent",
-            "3.0.0",
+            "6.0.0",
             DateTimeOffset.UtcNow,
             Math.Max(0, (long)(DateTimeOffset.UtcNow - StartedAtUtc).TotalSeconds),
             drive.AvailableFreeSpace,

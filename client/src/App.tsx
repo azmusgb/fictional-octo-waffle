@@ -5,6 +5,7 @@ import { CompareView } from './components/CompareView';
 import { ImportDropzone } from './components/ImportDropzone';
 import { InventoryExplorer } from './components/InventoryExplorer';
 import { MetricCard } from './components/MetricCard';
+import { OperationsCenter } from './components/OperationsCenter';
 import { ReviewQueue } from './components/ReviewQueue';
 import { StatusBadge } from './components/StatusBadge';
 import { SystemCenter } from './components/SystemCenter';
@@ -20,6 +21,7 @@ const navItems: Array<{ id: ViewId; label: string; symbol: string; description: 
   { id: 'review', label: 'Review queue', symbol: '✓', description: 'Human decisions, notes, tags, and follow-up' },
   { id: 'findings', label: 'Findings', symbol: '!', description: 'Validation, source evidence, and actions' },
   { id: 'compare', label: 'Compare', symbol: '⇄', description: 'Immutable snapshot differences' },
+  { id: 'operations', label: 'Operations', symbol: '◉', description: 'Agent setup, watches, profiles, impact, playbooks, and privacy' },
   { id: 'exports', label: 'Exports', symbol: '⇩', description: 'Portable reports and machine-readable data' },
   { id: 'system', label: 'System center', symbol: '⚙', description: 'Local agent connection, limits, and diagnostics' },
 ];
@@ -30,6 +32,7 @@ const pageDescriptions: Record<ViewId, string> = {
   review: 'Move artifacts through an explicit review lifecycle, capture local notes, and classify follow-up with bounded tags.',
   findings: 'Prioritize validation issues, source locations, evidence excerpts, and concrete recommended actions.',
   compare: 'Use normalized paths and SHA-256 identity to compare versions without altering either snapshot.',
+  operations: 'Continuously ingest local evidence, profile quality, trace impact, run repeatable playbooks, and create privacy-safe exports.',
   exports: 'Generate portable inventory, evidence reports, and a project-level manifest from immutable local records.',
   system: 'Verify the local processing agent, inspect its safety envelope, and configure a hosted or same-origin browser shell.',
 };
@@ -486,6 +489,8 @@ function App() {
             ) : <EmptySnapshot title="No snapshot selected" description="Select a completed import to review validation findings." /> : null}
 
             {view === 'compare' ? <CompareView projectId={selectedProject.id} imports={imports} /> : null}
+
+            {view === 'operations' ? <OperationsCenter projectId={selectedProject.id} importId={selectedImportId} onToast={setToast} /> : null}
 
             {view === 'exports' ? selectedImport ? (
               <div className="exports-grid">

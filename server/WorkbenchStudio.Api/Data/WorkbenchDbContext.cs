@@ -11,6 +11,11 @@ public sealed class WorkbenchDbContext(DbContextOptions<WorkbenchDbContext> opti
     public DbSet<FindingEntity> Findings => Set<FindingEntity>();
     public DbSet<ExportRecordEntity> Exports => Set<ExportRecordEntity>();
     public DbSet<ArtifactReviewEntity> ArtifactReviews => Set<ArtifactReviewEntity>();
+    public DbSet<WatchFolderEntity> WatchFolders => Set<WatchFolderEntity>();
+    public DbSet<DataProfileEntity> DataProfiles => Set<DataProfileEntity>();
+    public DbSet<LineageEdgeEntity> LineageEdges => Set<LineageEdgeEntity>();
+    public DbSet<PrivacyDetectionEntity> PrivacyDetections => Set<PrivacyDetectionEntity>();
+    public DbSet<PlaybookEntity> Playbooks => Set<PlaybookEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -78,6 +83,51 @@ public sealed class WorkbenchDbContext(DbContextOptions<WorkbenchDbContext> opti
                 .HasForeignKey<ArtifactReviewEntity>(x => x.ArtifactId)
                 .OnDelete(DeleteBehavior.Cascade);
             entity.HasIndex(x => new { x.Status, x.UpdatedAtUtc });
+        });
+
+
+
+        modelBuilder.Entity<WatchFolderEntity>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Name).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.FolderPath).HasMaxLength(4096).IsRequired();
+            entity.Property(x => x.IgnorePatternsJson).HasMaxLength(4000).IsRequired();
+            entity.HasIndex(x => new { x.ProjectId, x.Enabled, x.LastScannedAtUtc });
+        });
+
+        modelBuilder.Entity<DataProfileEntity>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.ProfileType).HasMaxLength(80).IsRequired();
+            entity.HasIndex(x => new { x.ImportSnapshotId, x.ArtifactId }).IsUnique();
+        });
+
+        modelBuilder.Entity<LineageEdgeEntity>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.EdgeType).HasMaxLength(80).IsRequired();
+            entity.Property(x => x.Label).HasMaxLength(240).IsRequired();
+            entity.HasIndex(x => new { x.ImportSnapshotId, x.FromArtifactId, x.ToArtifactId, x.EdgeType });
+        });
+
+        modelBuilder.Entity<PrivacyDetectionEntity>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Kind).HasMaxLength(80).IsRequired();
+            entity.Property(x => x.Severity).HasMaxLength(20).IsRequired();
+            entity.Property(x => x.SourceLocation).HasMaxLength(2048).IsRequired();
+            entity.Property(x => x.MaskedPreview).HasMaxLength(1000).IsRequired();
+            entity.Property(x => x.Status).HasMaxLength(30).IsRequired();
+            entity.HasIndex(x => new { x.ImportSnapshotId, x.ArtifactId, x.Kind });
+        });
+
+        modelBuilder.Entity<PlaybookEntity>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Name).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.Description).HasMaxLength(2000).IsRequired();
+            entity.HasIndex(x => new { x.ProjectId, x.UpdatedAtUtc });
         });
 
         modelBuilder.Entity<ExportRecordEntity>(entity =>

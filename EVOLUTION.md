@@ -1,27 +1,17 @@
 # Workbench Studio evolution
 
-## v5 objective
+## v6 product shift
 
-Move beyond evidence inspection into active investigation management: collect evidence into cases, ask repeatable cross-file questions, and apply transparent validation rules without losing source provenance.
+Version 5 organized investigations after evidence was imported. Version 6 adds the operational loop that precedes and follows investigation:
 
-## v5 signature experiences
+`Connect → Watch → Snapshot → Profile → Validate → Trace Impact → Investigate → Redact → Export → Repeat`
 
-1. Investigation Caseboard
-2. Cross-file Query Lab
-3. Validation Rule Studio
-4. Evidence Workstation
-5. Import Control Room
-6. Operational Review Queue
-7. Structured Diff Studio
-8. Relationship Map
-9. Activity Timeline
-10. Saved Views and System Center
+## Design principles
 
-## Interaction principles
-
-- **Evidence before assertion:** every conclusion must remain connected to an inspectable artifact and source location.
-- **Deterministic before opaque:** Query Lab and Rule Studio expose their criteria and outcomes.
-- **Depth before decoration:** metrics and findings must lead to direct action.
-- **Recoverable actions:** state-changing review and pin operations support undo.
-- **Progressive complexity:** the guided tour introduces the major workbench surfaces without blocking expert shortcuts.
-- **Local authority:** the hosted shell demonstrates workflows; the local agent remains authoritative for real data and persistence.
+- **Continuous, not noisy:** watches create snapshots only when fingerprints change.
+- **Immutable intake:** watched source folders are never changed; each detected state becomes a separate import.
+- **Profile before inspection:** users see dataset-level quality and drift before navigating individual records.
+- **Explain impact:** changes are connected to rules, findings, cases, and reports through explicit lineage edges.
+- **Repeatable work:** playbooks record deterministic steps and outcomes.
+- **Share safely:** sensitive values are detected locally and removed only from derivative exports.
+- **Evidence remains authoritative:** scores, profiles, and impact summaries remain navigational aids linked to source artifacts.

@@ -1,57 +1,98 @@
-# Workbench Studio v5
+# Workbench Studio v6
 
-Workbench Studio is a local-first evidence and workflow investigation application. It combines a React/TypeScript shell, an ASP.NET Core processing agent, SQLite metadata, disk-backed original artifacts, safe parsers, validation, review workflows, comparison, reporting, and a dependency-free hosted experience.
+Workbench Studio is a local-first evidence operations and investigation application. It combines a React/TypeScript shell, an ASP.NET Core processing agent, SQLite metadata, disk-backed immutable artifacts, safe format parsers, human review, structured comparison, continuous intake, quality profiling, impact analysis, repeatable playbooks, and privacy-safe exports.
 
-## Live hosted experience
+## v6 release objective
 
-Production: https://workbench-studio-v5.vercel.app
+Version 6 turns Workbench Studio from a manually operated investigation tool into a continuously useful evidence system:
 
-The hosted adapter in `hosted/index.html` is fully interactive in demo mode and persists its working state in browser `localStorage`. It does not upload original artifacts to Vercel.
+1. Connect and validate the local processing agent.
+2. Watch approved local folders for meaningful changes.
+3. Create immutable snapshots without repeated manual uploads.
+4. Profile data quality before opening individual records.
+5. Trace changes through findings, cases, and derived outputs.
+6. Run repeatable investigation playbooks.
+7. Detect sensitive-value candidates and generate redacted derivatives.
 
-### v5 signature capabilities
+## Signature v6 functionality
 
-- **Investigation Caseboard**
-  - Pin artifacts and evidence into named cases
-  - Maintain hypotheses, confidence, notes, and follow-up actions
-  - Reopen or complete case tasks
-  - Export a portable case brief
-- **Cross-file Query Lab**
-  - Run deterministic searches over paths, types, review state, tags, and findings
-  - Use query recipes and formatted query output
-  - Save query results as reusable views
-  - Send query result sets directly into review
-- **Validation Rule Studio**
-  - Enable or disable validation rules
-  - Run the active rule set against the demo workspace
-  - Inspect rule outcomes and severity summaries
-  - Create additional local rule definitions
-- **Evidence Workstation**
-  - Artifact tree and exact source navigation
-  - JSON, CSV, XML, XLSX, log, and text representations
-  - Structured, preview, raw, and relationship modes
-  - Evidence inspector with provenance, hash, review state, notes, and tags
-- **Import Control Room**
-  - Drag-and-drop, preflight metrics, safety stages, progress, pause, resume, cancel, and completion routing
-- **Review and comparison**
-  - Operational review queues, bulk actions, saved review state, keyboard shortcuts, and undo
-  - File, structured, and tabular snapshot comparison modes
-- **Workbench productivity**
-  - Command palette (`Ctrl+K` / `Cmd+K`)
-  - Focus mode (`F`)
-  - Guided first-run tour
-  - Relationship map, activity timeline, saved views, exports, theme, and density controls
+### Agent setup and recovery
 
-## Local production architecture
+- Localhost discovery workflow
+- Shell/agent major-version compatibility check
+- Workspace selection and validation
+- SQLite, original-file, and available-capacity checks
+- Last-project restoration and reconnect states
+
+### Watch folders and automatic snapshots
+
+- Persisted local watch-folder definitions
+- Manual, hourly, and daily modes
+- Ignore patterns and approval gates
+- Metadata fingerprints for change detection
+- Safe ZIP staging of folder contents
+- Immutable import creation through the existing import queue
+- Background scan worker with a one-minute scheduler and an hourly minimum automatic cadence
+
+### Data Quality Profiler
+
+- Persisted per-artifact profiles
+- CSV row, column, blank-cell, duplicate-row, and row-width metrics
+- JSON node, depth, object, and array metrics
+- XML element, attribute, and unique-name metrics
+- Log line, warning, and error counts
+- XLSX parser-summary reuse
+- Duplicate-content and parser-failure issues
+
+### Lineage and Impact Studio
+
+- Archive containment edges
+- SHA-256 duplicate-content edges
+- Cross-file filename-reference edges
+- Finding-to-source evidence edges
+- Rebuildable persisted lineage graph
+- Impact summaries for changed sources and downstream outputs
+
+### Investigation Playbooks
+
+- Persisted playbook definitions and ordered steps
+- Profile, privacy, lineage/impact, and review step types
+- Run status, progress, timestamp, and summary
+- Starter workflows for evidence readiness and regression review
+
+### Privacy and Redaction Center
+
+- Local pattern detection for SSNs, email addresses, phone numbers, payment-card candidates, and API-key candidates
+- Masked previews and source locations
+- Persisted detection status
+- Redacted derivative ZIP export for supported text artifacts
+- Immutable originals remain untouched
+
+## Existing investigation functionality retained
+
+- Evidence Workstation
+- Import Control Room
+- Caseboard
+- Query Lab
+- Validation Rule Studio
+- Operational Review Queue
+- Snapshot Diff Studio
+- Relationship Map
+- Activity Timeline
+- Saved views
+- Reports and project manifest
+- Theme, density, command palette, focus mode, tour, and undo
+
+## Local architecture
 
 - UI: React 19 + TypeScript + Vite
-- Processing agent: ASP.NET Core
-- Storage: SQLite metadata plus disk-backed originals, extracted artifacts, caches, and exports
+- Local processing agent: ASP.NET Core targeting .NET 10
+- Metadata: SQLite
+- Artifact storage: disk-backed originals, extraction cache, and exports
 - Parsers: JSON, CSV, XML, text/log, and XLSX
-- Tests: xUnit, Vitest, and source fixtures
+- Tests: xUnit and Vitest
 
-The ASP.NET Core agent remains authoritative for real imports, parsing, immutable snapshots, evidence, findings, persisted review decisions, comparison, and report generation.
-
-## Run on Windows
+## Run locally
 
 ```powershell
 .\scripts\bootstrap.ps1
@@ -60,18 +101,19 @@ The ASP.NET Core agent remains authoritative for real imports, parsing, immutabl
 
 Open `http://localhost:5173`.
 
-## Build
+## Build and test
 
 ```powershell
 .\scripts\build.ps1
 ```
 
-## Hosted source and deployment transport
+The build script restores dependencies, runs backend and frontend tests, builds the Vite client, copies it into the ASP.NET `wwwroot`, and publishes a combined local release.
 
-- `hosted/index.html`: normal, self-contained HTML/CSS/JavaScript source
-- `hosted/vercel-transport/`: reproducible gzip/base64 chunk transport used to work around connector payload limits
-- Production Vercel loader: pinned to immutable Git commit `a66a7cbf5f6bb9748c0356b1f32f962fc463856a`
+## Safety boundary
 
-## Validation boundary
-
-The hosted v5 source passed HTML parsing, JavaScript syntax checking, JSON validation, local compression/decompression identity verification, Vercel production deployment, production-response verification, immutable first/last chunk retrieval, and runtime-error inspection. This execution environment does not contain the .NET SDK, and its npm mirror lacks required React type packages, so the definitive ASP.NET build, xUnit run, and dependency-backed Vite build must be completed on a development machine.
+- Imported content is never executed.
+- ZIP extraction is path-bounded and resource-limited.
+- XML DTD processing and external resolution are prohibited.
+- Watch folders stage a ZIP copy; source folders are never modified.
+- Privacy exports create redacted derivatives and retain original evidence.
+- Hosted demo data stays in browser storage unless the user connects the local agent.

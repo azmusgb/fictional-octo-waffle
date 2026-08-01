@@ -1,4 +1,4 @@
-export type ViewId = 'overview' | 'inventory' | 'review' | 'findings' | 'compare' | 'exports' | 'system';
+export type ViewId = 'overview' | 'inventory' | 'review' | 'findings' | 'compare' | 'operations' | 'exports' | 'system';
 export type InventoryViewMode = 'table' | 'tree';
 export type ArtifactSort = 'path' | 'size-desc' | 'findings-desc' | 'status';
 
@@ -171,4 +171,70 @@ export interface AgentStatus {
     maximumExtractedFiles: number;
     maximumCompressionRatio: number;
   };
+}
+
+export interface WatchFolder {
+  id: string;
+  projectId: string;
+  name: string;
+  folderPath: string;
+  enabled: boolean;
+  triggerMode: 'Manual' | 'Hourly' | 'Daily';
+  scanIntervalMinutes: number;
+  ignorePatterns: string[];
+  requireApproval: boolean;
+  lastScannedAtUtc: string | null;
+  lastImportId: string | null;
+}
+
+export interface DataProfile {
+  id: string;
+  artifactId: string;
+  artifactPath: string;
+  profileType: string;
+  metrics: Record<string, unknown>;
+  issues: Array<{ code?: string; message?: string }>;
+  createdAtUtc: string;
+}
+
+export interface LineageEdge {
+  id: string;
+  fromArtifactId: string;
+  fromPath: string;
+  toArtifactId: string | null;
+  toPath: string | null;
+  edgeType: string;
+  label: string;
+  evidence: Record<string, unknown> | null;
+}
+
+export interface PrivacyDetection {
+  id: string;
+  artifactId: string;
+  artifactPath: string;
+  kind: string;
+  severity: string;
+  sourceLocation: string;
+  maskedPreview: string;
+  status: string;
+}
+
+export interface PlaybookStep {
+  id: string;
+  name: string;
+  type: string;
+  required: boolean;
+  configuration?: Record<string, unknown> | null;
+}
+
+export interface Playbook {
+  id: string;
+  projectId: string;
+  name: string;
+  description: string;
+  steps: PlaybookStep[];
+  status: string;
+  progressPercent: number;
+  lastRunSummary: string | null;
+  lastRunAtUtc: string | null;
 }

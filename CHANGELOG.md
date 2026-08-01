@@ -1,27 +1,32 @@
 # Changelog
 
-## 0.5.0 — 2026-08-01
+## 0.6.0 — 2026-08-01
 
-### Product workflow
+### Continuous evidence operations
 
-- Added Investigation Caseboard with evidence pinning, hypotheses, confidence, notes, tasks, and case-brief export.
-- Added cross-file Query Lab with deterministic recipes, result sets, saved views, and review routing.
-- Added Validation Rule Studio with rule activation, rule execution, result summaries, and local rule creation.
-- Added guided first-run onboarding and contextual tour controls.
-- Added focus mode and keyboard shortcut support.
-- Added undo for review-state and evidence-pin operations.
+- Added persisted watch-folder definitions with manual, hourly, and daily scan modes.
+- Added metadata fingerprinting and automatic immutable snapshot creation.
+- Added a background watch worker with an hourly minimum automatic cadence.
+- Added ignore patterns, approval flags, pause/resume, scan-now, and last-import state.
 
-### Existing workbench depth retained
+### Data intelligence
 
-- Evidence Workstation with artifact-specific viewers and exact evidence navigation.
-- Import Control Room with preflight and staged processing progress.
-- Functional command palette.
-- Operational review queue with bulk actions and persisted decisions.
-- File, structured, and tabular Diff Studio modes.
-- Relationship exploration, activity timeline, saved views, exports, theme, density, and local-agent connection workflow.
+- Added persisted data profiles for CSV, JSON, XML, XLSX, logs, and text evidence.
+- Added blanks, duplicates, row-width drift, structure depth, formula-summary, and parser-failure signals.
+- Added persisted lineage edges for containment, duplicate content, cross-file references, and finding evidence.
 
-### Delivery
+### Investigation workflows
 
-- Added reproducible chunked static transport for deployment through constrained connectors.
-- Pinned the hosted payload to immutable Git commit `a66a7cbf5f6bb9748c0356b1f32f962fc463856a`.
-- Deployed production project `workbench-studio-v5` on Vercel.
+- Added persisted investigation playbooks with ordered steps, progress, status, and run summaries.
+- Added Agent Setup, Watch Folders, Profiler, Impact Studio, Playbooks, and Privacy Center to the hosted experience.
+- Added a React Operations Center connected to the local-agent APIs.
+
+### Privacy
+
+- Added local sensitive-value candidate detection.
+- Added masked evidence previews and persisted review status.
+- Added redacted derivative ZIP exports for supported text artifacts.
+
+### Compatibility
+
+- Retained the Safari-compatible direct-source Vercel loader; no browser gzip or base64 decoding is required.

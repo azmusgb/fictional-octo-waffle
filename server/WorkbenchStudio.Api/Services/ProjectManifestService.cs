@@ -28,7 +28,7 @@ public sealed class ProjectManifestService(IDbContextFactory<WorkbenchDbContext>
         {
             schemaVersion = "workbench-project-manifest/1.0",
             generatedAtUtc = DateTimeOffset.UtcNow,
-            applicationVersion = "3.0.0",
+            applicationVersion = "6.0.0",
             project = new { project.Id, project.Name, project.CreatedAtUtc, project.UpdatedAtUtc },
             imports = project.Imports.OrderBy(x => x.CreatedAtUtc).Select(import => new
             {

@@ -1,99 +1,57 @@
-# Workbench Studio Architecture
+# Workbench Studio v6 architecture
 
 ## Core invariant
 
-Every derived result must remain traceable to an immutable import snapshot, stored artifact path, SHA-256 content hash, parser identifier, parser version, and source evidence location.
+Every derived profile, privacy detection, lineage edge, playbook result, finding, review decision, comparison result, and export must remain traceable to an immutable import snapshot and its stored artifact identity.
 
 ## Runtime topology
 
 ```text
-Browser UI (React + TypeScript)
-        │ HTTP / multipart
+Hosted or local React shell
+        │ HTTP to approved local origin
         ▼
-Local ASP.NET Core API
-        ├── Import queue + background worker
-        ├── Safe ZIP extraction
-        ├── Parser registry
-        │   ├── JSON
-        │   ├── CSV
-        │   ├── XML
-        │   ├── Text / log
-        │   └── XLSX package analysis
-        ├── Validation findings
-        ├── Search
-        ├── Snapshot comparison
-        └── Report generation
+ASP.NET Core local agent
+        ├── project/import/artifact APIs
+        ├── safe ZIP extraction + parser registry
+        ├── import queue + worker
+        ├── watch-folder scheduler
+        ├── data profile service
+        ├── lineage/impact service
+        ├── playbook orchestration service
+        ├── privacy scan + redacted export service
+        ├── comparison/search/report services
         │
-        ├── SQLite metadata: .workspace/workbench.db
-        └── File storage: .workspace/projects/{project}/imports/{snapshot}/...
+        ├── SQLite metadata
+        └── disk-backed originals, extracts, caches, exports
 ```
 
-## Storage model
+## Persisted v6 records
 
-SQLite stores project state, immutable snapshot metadata, artifact indexes, hashes, parser results, findings, processing state, and export history. Original and extracted files remain file-backed to avoid database bloat and permit range-enabled streaming.
+- `WatchFolders`: local path, schedule, ignore patterns, fingerprint, scan state, last snapshot
+- `DataProfiles`: artifact metrics and quality issues
+- `LineageEdges`: source/target relationship, edge type, label, evidence
+- `PrivacyDetections`: kind, severity, source location, masked preview, review status
+- `Playbooks`: ordered step JSON, run status, progress, summary, timestamps
 
-## Import lifecycle
+## Watch scan lifecycle
 
-`Queued → Preparing → Extracting → Inventorying → Parsing → Validating → Indexing → Completed|CompletedWithWarnings`
+1. Resolve and validate the configured local folder.
+2. Enumerate files after ignore-pattern filtering.
+3. Build a deterministic metadata fingerprint from normalized path, size, and modified time.
+4. Stop when the fingerprint is unchanged unless the user forces a scan.
+5. Safely stage an archive copy in a new import workspace.
+6. Persist an immutable queued import.
+7. Submit the import to the existing parser queue.
+8. Retain the watch folder's new fingerprint and import identifier.
 
-Cancellation is persisted in SQLite and checked between extraction and parsing operations. Interrupted nonterminal imports return to `Queued` during API startup. Failed/cancelled imports may be retried only while staged originals remain available.
+## Profiling boundary
 
-## Parser contract
+Profiles are deterministic and bounded. They are not statistical guarantees. Large text artifacts are sampled, XLSX profiles reuse the package parser's bounded structure summary, and parser errors become explicit profile issues.
 
-A parser receives a file path, normalized relative path, extension, size, and cancellation token. It returns:
+## Privacy boundary
 
-- Parse status
-- Parser ID and semantic version
-- Structured summary
-- Bounded safe preview
-- Findings with severity, rule ID, location, evidence, and recommendation
-- Optional parser error
+Privacy detection uses local deterministic patterns. Matches are candidates requiring review, not legal or compliance determinations. Redacted ZIPs contain only supported text artifacts and do not modify originals.
 
-The parser registry selects the first parser that declares support for the artifact context.
+## Persistence compatibility
 
-## XLSX boundary
-
-XLSX is treated as an Office Open XML ZIP package, not as executable spreadsheet content.
-
-- Package entries and total expanded bytes are bounded.
-- XML DTD processing and external resolution are prohibited.
-- Workbook relationships resolve worksheet package paths.
-- Shared strings and worksheet cells are read for inventory and bounded preview.
-- Formula expressions are detected; cached values may be displayed.
-- Formulas are never recalculated.
-- Macros are never executed.
-- Hidden-sheet presence is surfaced as evidence.
-
-## Search boundary
-
-The global command palette calls the local `/search` endpoint. Search operates over persisted metadata, paths, hashes, parser identities, rules, titles, and finding messages. It does not send content to external services.
-
-## Workspace health heuristic
-
-The client computes an advisory score from:
-
-- Parse coverage
-- Unsupported artifact ratio
-- Parser failure ratio
-- Error and warning counts
-
-The score is a prioritization aid only. It is not persisted, audited, or represented as an authoritative validation outcome.
-
-## Security controls
-
-- ZIP paths are resolved under a fixed extraction root.
-- Absolute paths and traversal outside the workspace are rejected.
-- Limits cover upload size, per-file size, extracted bytes, extracted files, and compression ratio.
-- XLSX package inspection adds entry-count and expanded-package limits.
-- XML DTD processing and external resolution are disabled.
-- Imported content is never executed.
-- Raw artifact delivery uses stored paths rather than user-supplied filesystem paths.
-- Download responses are range-enabled and retain the stored filename/media type.
-
-## Current deliberate limits
-
-- Inventory loading is capped at 2,000 rows per client request.
-- Persistence initialization still uses `EnsureCreated`; committed migrations are required before long-lived production upgrades.
-- Progress uses polling rather than WebSockets, SignalR, or server-sent events.
-- `.xls`, PDF, Word, PowerPoint, and unknown binary content remain inventory-only.
-- Authentication and multi-user collaboration are excluded from the local-first product boundary.
+The current bootstrapper uses `CREATE TABLE IF NOT EXISTS` for additive v6 tables so existing local v5 workspaces can open without data loss. A formal migration chain remains recommended before broad production distribution.
