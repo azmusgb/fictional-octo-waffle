@@ -2,6 +2,10 @@
 
 Workbench Studio is a local-first evidence operations and investigation application. It combines a React/TypeScript shell, an ASP.NET Core processing agent, SQLite metadata, disk-backed immutable artifacts, safe format parsers, human review, structured comparison, continuous intake, quality profiling, impact analysis, repeatable playbooks, and privacy-safe exports.
 
+## Live hosted experience
+
+Production: https://workbench-studio-v6.vercel.app
+
 ## v6 release objective
 
 Version 6 turns Workbench Studio from a manually operated investigation tool into a continuously useful evidence system:
