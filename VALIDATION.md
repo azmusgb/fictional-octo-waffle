@@ -13,6 +13,20 @@
 - Source package manifest regenerated from the final file tree.
 - Final ZIP integrity and SHA-256 verification completed.
 
+## Connected delivery verification
+
+- GitHub PR #2 merged successfully.
+- v6 source merge commit: `dd046974605d775733ed90bc38faffda304c6556`.
+- Vercel project: `workbench-studio-v6`.
+- Vercel project ID: `prj_QV3KdfS3TFVRfZ5o4vgX7vsBEVI8`.
+- Production deployment ID: `dpl_99XF4qmSMMjj5YDYk8Me6u4tV9f1`.
+- Production alias: https://workbench-studio-v6.vercel.app
+- Production state: `READY`.
+- Production response: HTTP 200.
+- Production loader uses direct immutable-source retrieval and contains no `DecompressionStream` dependency.
+- Production response uses `Cache-Control: no-store`.
+- Vercel runtime-error clusters after deployment: none detected.
+
 ## Environmental limits
 
 - The .NET SDK is not installed in this execution environment, so ASP.NET compilation and xUnit execution could not be performed here.
