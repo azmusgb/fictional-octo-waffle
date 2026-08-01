@@ -18,6 +18,9 @@ public sealed class WorkbenchDbContext(DbContextOptions<WorkbenchDbContext> opti
     public DbSet<PlaybookEntity> Playbooks => Set<PlaybookEntity>();
     public DbSet<BaselinePolicyEntity> BaselinePolicies => Set<BaselinePolicyEntity>();
     public DbSet<AutomationRecipeEntity> AutomationRecipes => Set<AutomationRecipeEntity>();
+    public DbSet<QueuePolicyEntity> QueuePolicies => Set<QueuePolicyEntity>();
+    public DbSet<ScenarioRunEntity> ScenarioRuns => Set<ScenarioRunEntity>();
+    public DbSet<ApprovalGateEntity> ApprovalGates => Set<ApprovalGateEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -148,6 +151,36 @@ public sealed class WorkbenchDbContext(DbContextOptions<WorkbenchDbContext> opti
             entity.Property(x => x.Description).HasMaxLength(2000).IsRequired();
             entity.Property(x => x.TriggerMode).HasMaxLength(40).IsRequired();
             entity.HasIndex(x => new { x.ProjectId, x.Enabled, x.UpdatedAtUtc });
+        });
+
+
+
+        modelBuilder.Entity<QueuePolicyEntity>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Name).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.WeightsJson).IsRequired();
+            entity.HasIndex(x => new { x.ProjectId, x.Active, x.UpdatedAtUtc });
+        });
+
+        modelBuilder.Entity<ScenarioRunEntity>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Name).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.AssumptionsJson).IsRequired();
+            entity.Property(x => x.ResultJson).IsRequired();
+            entity.HasIndex(x => new { x.ProjectId, x.ImportSnapshotId, x.CreatedAtUtc });
+        });
+
+        modelBuilder.Entity<ApprovalGateEntity>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Name).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.GateType).HasMaxLength(80).IsRequired();
+            entity.Property(x => x.RequiredRole).HasMaxLength(120).IsRequired();
+            entity.Property(x => x.Status).HasMaxLength(40).IsRequired();
+            entity.Property(x => x.RequirementsJson).IsRequired();
+            entity.HasIndex(x => new { x.ProjectId, x.ImportSnapshotId, x.Status });
         });
 
         modelBuilder.Entity<ExportRecordEntity>(entity =>

@@ -23,6 +23,14 @@ import type {
   AutomationRecipe,
   AutomationStep,
   EvidenceAnswer,
+  QueuePolicy,
+  QueueWeight,
+  AdaptiveQueueItem,
+  ScenarioRun,
+  ScenarioAssumption,
+  ApprovalGate,
+  AnomalyExplanation,
+  ExecutiveSummary,
 } from './types';
 
 export class ApiError extends Error {
@@ -142,4 +150,17 @@ export const api = {
   runAutomationRecipe: (projectId: string, recipeId: string, importId: string) => request<AutomationRecipe>(`/api/projects/${projectId}/automation-recipes/${recipeId}/run/${importId}`, { method: 'POST' }),
   askEvidence: (projectId: string, importId: string, question: string, maximumCitations = 6) => request<EvidenceAnswer>(`/api/projects/${projectId}/imports/${importId}/evidence-assistant/ask`, { method: 'POST', body: JSON.stringify({ question, maximumCitations }) }),
   decisionBriefUrl: (projectId: string, importId: string) => url(`/api/projects/${projectId}/imports/${importId}/decision-brief`),
+
+  getQueuePolicies: (projectId: string) => request<QueuePolicy[]>(`/api/projects/${projectId}/queue-policies`),
+  createQueuePolicy: (projectId: string, input: { name: string; weights: QueueWeight[] | null; slaHours: number; active: boolean }) => request<QueuePolicy>(`/api/projects/${projectId}/queue-policies`, { method: 'POST', body: JSON.stringify(input) }),
+  updateQueuePolicy: (projectId: string, policyId: string, input: Partial<{ name: string; weights: QueueWeight[]; slaHours: number; active: boolean }>) => request<QueuePolicy>(`/api/projects/${projectId}/queue-policies/${policyId}`, { method: 'PATCH', body: JSON.stringify(input) }),
+  getAdaptiveQueue: (projectId: string, importId: string, policyId?: string) => request<AdaptiveQueueItem[]>(`/api/projects/${projectId}/imports/${importId}/adaptive-queue${policyId ? `?policyId=${policyId}` : ''}`),
+  getScenarios: (projectId: string) => request<ScenarioRun[]>(`/api/projects/${projectId}/scenarios`),
+  runScenario: (projectId: string, input: { name: string; importId: string; assumptions: ScenarioAssumption[] }) => request<ScenarioRun>(`/api/projects/${projectId}/scenarios`, { method: 'POST', body: JSON.stringify(input) }),
+  getApprovalGates: (projectId: string) => request<ApprovalGate[]>(`/api/projects/${projectId}/approval-gates`),
+  createApprovalGate: (projectId: string, input: { name: string; importId: string; gateType: string; requiredRole: string }) => request<ApprovalGate>(`/api/projects/${projectId}/approval-gates`, { method: 'POST', body: JSON.stringify(input) }),
+  decideApprovalGate: (projectId: string, gateId: string, input: { decision: 'Approve' | 'Reject'; decidedBy: string; rationale?: string }) => request<ApprovalGate>(`/api/projects/${projectId}/approval-gates/${gateId}/decision`, { method: 'POST', body: JSON.stringify(input) }),
+  getAnomalyExplanations: (projectId: string, importId: string) => request<AnomalyExplanation[]>(`/api/projects/${projectId}/imports/${importId}/anomaly-explanations`),
+  getExecutiveSummary: (projectId: string, importId: string) => request<ExecutiveSummary>(`/api/projects/${projectId}/imports/${importId}/executive-summary`),
+  executiveBriefUrl: (projectId: string, importId: string) => url(`/api/projects/${projectId}/imports/${importId}/executive-brief`),
 };

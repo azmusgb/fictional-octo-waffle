@@ -1,7 +1,7 @@
 {
-  "name": "workbench-studio-v7",
+  "name": "workbench-studio-v8",
   "private": true,
-  "version": "0.7.0",
+  "version": "0.8.0",
   "scripts": {
     "dev": "npm --prefix client run dev",
     "build": "npm --prefix client run build",

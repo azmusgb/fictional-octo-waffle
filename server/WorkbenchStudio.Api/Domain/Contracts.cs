@@ -256,3 +256,28 @@ public sealed record TriageItemDto(
 public sealed record EvidenceQuestionRequest(string Question, int? MaximumCitations);
 public sealed record EvidenceCitationDto(Guid? ArtifactId, Guid? FindingId, string ArtifactPath, string? SourceLocation, string Excerpt, string Basis);
 public sealed record EvidenceAnswerDto(string Answer, string Confidence, IReadOnlyList<EvidenceCitationDto> Citations, IReadOnlyList<string> FollowUpQueries);
+
+
+public sealed record QueueWeightDto(string Metric, double Multiplier, string Explanation);
+public sealed record CreateQueuePolicyRequest(string Name, IReadOnlyList<QueueWeightDto>? Weights, int SlaHours, bool Active);
+public sealed record UpdateQueuePolicyRequest(string? Name, IReadOnlyList<QueueWeightDto>? Weights, int? SlaHours, bool? Active);
+public sealed record QueuePolicyDto(Guid Id, Guid ProjectId, string Name, IReadOnlyList<QueueWeightDto> Weights, int SlaHours, bool Active, DateTimeOffset CreatedAtUtc, DateTimeOffset UpdatedAtUtc);
+public sealed record QueueReasonDto(string Name, int Points, string Explanation);
+public sealed record AdaptiveQueueItemDto(Guid ArtifactId, string ArtifactPath, int Score, string Band, string ReviewStatus, DateTimeOffset DueAtUtc, string SlaState, IReadOnlyList<QueueReasonDto> Reasons, int Rank = 0);
+
+public sealed record ScenarioAssumptionDto(string Metric, double Delta, string Description);
+public sealed record CreateScenarioRunRequest(string Name, Guid ImportId, IReadOnlyList<ScenarioAssumptionDto> Assumptions);
+public sealed record ScenarioMetricDto(string Metric, double Current, double Projected, double Delta);
+public sealed record ScenarioResultDto(int CurrentReadinessScore, int ProjectedReadinessScore, int ScoreDelta, string ProjectedStatus, IReadOnlyList<ScenarioMetricDto> Metrics, IReadOnlyList<string> Recommendations);
+public sealed record ScenarioRunDto(Guid Id, Guid ProjectId, Guid ImportSnapshotId, string Name, IReadOnlyList<ScenarioAssumptionDto> Assumptions, ScenarioResultDto Result, DateTimeOffset CreatedAtUtc);
+
+public sealed record CreateApprovalGateRequest(string Name, Guid ImportId, string GateType, string RequiredRole);
+public sealed record ApprovalDecisionRequest(string Decision, string DecidedBy, string? Rationale);
+public sealed record ApprovalRequirementDto(string Name, bool Passed, string Evidence);
+public sealed record ApprovalGateDto(Guid Id, Guid ProjectId, Guid ImportSnapshotId, string Name, string GateType, string RequiredRole, string Status, IReadOnlyList<ApprovalRequirementDto> Requirements, string? DecidedBy, string? Rationale, DateTimeOffset CreatedAtUtc, DateTimeOffset? DecidedAtUtc);
+
+public sealed record AnomalyEvidenceDto(Guid FindingId, Guid? ArtifactId, string? SourceLocation, string? Excerpt, string RuleId);
+public sealed record AnomalyExplanationDto(Guid? ArtifactId, string ArtifactPath, string Severity, string Title, string Observed, string Expected, IReadOnlyList<string> Drivers, IReadOnlyList<AnomalyEvidenceDto> Evidence, string Impact, string RecommendedAction);
+
+public sealed record ExecutivePriorityDto(int Rank, string ArtifactPath, int Score, string Band, IReadOnlyList<string> Drivers);
+public sealed record ExecutiveSummaryDto(Guid ImportId, int ReadinessScore, string Status, int QueueItems, int CriticalPriorities, int PendingApprovals, int RegressedPolicies, IReadOnlyDictionary<string, double> Metrics, IReadOnlyList<string> Highlights, IReadOnlyList<ExecutivePriorityDto> TopPriorities, DateTimeOffset GeneratedAtUtc);

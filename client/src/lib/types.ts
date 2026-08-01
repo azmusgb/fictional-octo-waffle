@@ -1,4 +1,4 @@
-export type ViewId = 'overview' | 'inventory' | 'review' | 'findings' | 'compare' | 'operations' | 'decisions' | 'exports' | 'system';
+export type ViewId = 'overview' | 'inventory' | 'review' | 'findings' | 'compare' | 'operations' | 'decisions' | 'command' | 'exports' | 'system';
 export type InventoryViewMode = 'table' | 'tree';
 export type ArtifactSort = 'path' | 'size-desc' | 'findings-desc' | 'status';
 
@@ -265,3 +265,19 @@ export interface AutomationRecipe {
 
 export interface EvidenceCitation { artifactId: string | null; findingId: string | null; artifactPath: string; sourceLocation: string | null; excerpt: string; basis: string; }
 export interface EvidenceAnswer { answer: string; confidence: string; citations: EvidenceCitation[]; followUpQueries: string[]; }
+
+
+export interface QueueWeight { metric: string; multiplier: number; explanation: string; }
+export interface QueuePolicy { id: string; projectId: string; name: string; weights: QueueWeight[]; slaHours: number; active: boolean; createdAtUtc: string; updatedAtUtc: string; }
+export interface QueueReason { name: string; points: number; explanation: string; }
+export interface AdaptiveQueueItem { artifactId: string; artifactPath: string; score: number; band: string; reviewStatus: ReviewStatus; dueAtUtc: string; slaState: string; reasons: QueueReason[]; rank: number; }
+export interface ScenarioAssumption { metric: string; delta: number; description: string; }
+export interface ScenarioMetric { metric: string; current: number; projected: number; delta: number; }
+export interface ScenarioResult { currentReadinessScore: number; projectedReadinessScore: number; scoreDelta: number; projectedStatus: string; metrics: ScenarioMetric[]; recommendations: string[]; }
+export interface ScenarioRun { id: string; projectId: string; importSnapshotId: string; name: string; assumptions: ScenarioAssumption[]; result: ScenarioResult; createdAtUtc: string; }
+export interface ApprovalRequirement { name: string; passed: boolean; evidence: string; }
+export interface ApprovalGate { id: string; projectId: string; importSnapshotId: string; name: string; gateType: string; requiredRole: string; status: string; requirements: ApprovalRequirement[]; decidedBy: string | null; rationale: string | null; createdAtUtc: string; decidedAtUtc: string | null; }
+export interface AnomalyEvidence { findingId: string; artifactId: string | null; sourceLocation: string | null; excerpt: string | null; ruleId: string; }
+export interface AnomalyExplanation { artifactId: string | null; artifactPath: string; severity: string; title: string; observed: string; expected: string; drivers: string[]; evidence: AnomalyEvidence[]; impact: string; recommendedAction: string; }
+export interface ExecutivePriority { rank: number; artifactPath: string; score: number; band: string; drivers: string[]; }
+export interface ExecutiveSummary { importId: string; readinessScore: number; status: string; queueItems: number; criticalPriorities: number; pendingApprovals: number; regressedPolicies: number; metrics: Record<string, number>; highlights: string[]; topPriorities: ExecutivePriority[]; generatedAtUtc: string; }

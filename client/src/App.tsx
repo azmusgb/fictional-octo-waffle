@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, type ChangeEvent, type KeyboardEvent as ReactKeyboardEvent, type MouseEvent as ReactMouseEvent } from 'react';
 import { ArtifactInspector } from './components/ArtifactInspector';
 import { CommandPalette } from './components/CommandPalette';
+import { CommandIntelligenceCenter } from './components/CommandIntelligenceCenter';
 import { CompareView } from './components/CompareView';
 import { DecisionCenter } from './components/DecisionCenter';
 import { ImportDropzone } from './components/ImportDropzone';
@@ -24,6 +25,7 @@ const navItems: Array<{ id: ViewId; label: string; symbol: string; description: 
   { id: 'compare', label: 'Compare', symbol: '⇄', description: 'Immutable snapshot differences' },
   { id: 'operations', label: 'Operations', symbol: '◉', description: 'Agent setup, watches, profiles, impact, playbooks, and privacy' },
   { id: 'decisions', label: 'Decision center', symbol: '◆', description: 'Triage, baselines, automation, grounded answers, and handoff' },
+  { id: 'command', label: 'Command intelligence', symbol: '◇', description: 'Adaptive queues, scenarios, approvals, explanations, and executive reporting' },
   { id: 'exports', label: 'Exports', symbol: '⇩', description: 'Portable reports and machine-readable data' },
   { id: 'system', label: 'System center', symbol: '⚙', description: 'Local agent connection, limits, and diagnostics' },
 ];
@@ -36,6 +38,7 @@ const pageDescriptions: Record<ViewId, string> = {
   compare: 'Use normalized paths and SHA-256 identity to compare versions without altering either snapshot.',
   operations: 'Continuously ingest local evidence, profile quality, trace impact, run repeatable playbooks, and create privacy-safe exports.',
   decisions: 'Prioritize work transparently, measure regressions against approved baselines, automate readiness checks, ask citation-first questions, and package portable decision briefs.',
+  command: 'Continuously rank work by urgency, simulate remediation outcomes, enforce approval gates, explain anomalies, and produce executive decision briefings.',
   exports: 'Generate portable inventory, evidence reports, and a project-level manifest from immutable local records.',
   system: 'Verify the local processing agent, inspect its safety envelope, and configure a hosted or same-origin browser shell.',
 };
@@ -344,7 +347,7 @@ function App() {
       <header className="topbar">
         <div className="brand-lockup">
           <div className="brand-mark" aria-hidden="true">W</div>
-          <div><strong>Workbench Studio</strong><span>Decision operations · v7</span></div>
+          <div><strong>Workbench Studio</strong><span>Command intelligence · v8</span></div>
         </div>
 
         <div className="topbar-center">
@@ -496,6 +499,8 @@ function App() {
             {view === 'operations' ? <OperationsCenter projectId={selectedProject.id} importId={selectedImportId} onToast={setToast} /> : null}
 
             {view === 'decisions' ? <DecisionCenter projectId={selectedProject.id} importId={selectedImportId} imports={imports} onInspectArtifact={setSelectedArtifactId} onToast={setToast} /> : null}
+
+            {view === 'command' ? <CommandIntelligenceCenter projectId={selectedProject.id} importId={selectedImportId} imports={imports} onInspectArtifact={setSelectedArtifactId} onToast={setToast} /> : null}
 
             {view === 'exports' ? selectedImport ? (
               <div className="exports-grid">

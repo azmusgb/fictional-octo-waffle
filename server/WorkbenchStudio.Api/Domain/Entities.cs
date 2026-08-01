@@ -274,3 +274,43 @@ public sealed class AutomationRecipeEntity
     public DateTimeOffset CreatedAtUtc { get; set; }
     public DateTimeOffset UpdatedAtUtc { get; set; }
 }
+
+
+public sealed class QueuePolicyEntity
+{
+    public Guid Id { get; set; }
+    public Guid ProjectId { get; set; }
+    public required string Name { get; set; }
+    public required string WeightsJson { get; set; }
+    public int SlaHours { get; set; } = 24;
+    public bool Active { get; set; } = true;
+    public DateTimeOffset CreatedAtUtc { get; set; }
+    public DateTimeOffset UpdatedAtUtc { get; set; }
+}
+
+public sealed class ScenarioRunEntity
+{
+    public Guid Id { get; set; }
+    public Guid ProjectId { get; set; }
+    public Guid ImportSnapshotId { get; set; }
+    public required string Name { get; set; }
+    public required string AssumptionsJson { get; set; }
+    public required string ResultJson { get; set; }
+    public DateTimeOffset CreatedAtUtc { get; set; }
+}
+
+public sealed class ApprovalGateEntity
+{
+    public Guid Id { get; set; }
+    public Guid ProjectId { get; set; }
+    public Guid ImportSnapshotId { get; set; }
+    public required string Name { get; set; }
+    public required string GateType { get; set; }
+    public required string RequiredRole { get; set; }
+    public string Status { get; set; } = "Pending";
+    public required string RequirementsJson { get; set; }
+    public string? DecidedBy { get; set; }
+    public string? Rationale { get; set; }
+    public DateTimeOffset CreatedAtUtc { get; set; }
+    public DateTimeOffset? DecidedAtUtc { get; set; }
+}

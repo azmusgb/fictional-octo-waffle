@@ -37,6 +37,7 @@ builder.Services.AddScoped<LineageService>();
 builder.Services.AddScoped<PrivacyService>();
 builder.Services.AddScoped<PlaybookService>();
 builder.Services.AddScoped<DecisionOperationsService>();
+builder.Services.AddScoped<CommandIntelligenceService>();
 builder.Services.AddHostedService<ImportWorkerService>();
 builder.Services.AddHostedService<WatchFolderWorkerService>();
 builder.Services.AddHostedService<AutomationRecipeWorkerService>();
@@ -112,7 +113,7 @@ app.MapGet("/api/health", () => Results.Ok(new
 {
     status = "Healthy",
     service = "Workbench Studio Local Agent",
-    version = "7.0.0",
+    version = "8.0.0",
     timestampUtc = DateTimeOffset.UtcNow
 }));
 app.MapSystemEndpoints();
@@ -121,6 +122,7 @@ app.MapImportsEndpoints();
 app.MapArtifactsEndpoints();
 app.MapOperationsEndpoints();
 app.MapDecisionEndpoints();
+app.MapCommandIntelligenceEndpoints();
 
 var webRoot = app.Environment.WebRootPath;
 if (!string.IsNullOrWhiteSpace(webRoot) && Directory.Exists(webRoot))
@@ -132,7 +134,7 @@ if (!string.IsNullOrWhiteSpace(webRoot) && Directory.Exists(webRoot))
 else
 {
     app.MapGet("/", () => Results.Text(
-        "Workbench Studio Local Agent v7 is running. Start the Vite client, use the hosted shell, or build the client into wwwroot.",
+        "Workbench Studio Local Agent v8 is running. Start the Vite client, use the hosted shell, or build the client into wwwroot.",
         "text/plain"));
 }
 

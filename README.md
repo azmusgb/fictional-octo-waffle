@@ -1,84 +1,62 @@
-# Workbench Studio v7
+# Workbench Studio v8
 
-Workbench Studio is a local-first evidence operations, investigation, and decision-support workbench. It combines a React/TypeScript desktop-style shell, an ASP.NET Core local processing agent, SQLite metadata, disk-backed immutable artifacts, deterministic parsers, human review, continuous intake, quality profiling, impact analysis, privacy-safe exports, and transparent decision operations.
+Workbench Studio is a local-first evidence operations, investigation, decision-support, and command-intelligence workbench. It combines a React/TypeScript desktop shell, an ASP.NET Core local agent, SQLite metadata, immutable disk-backed evidence, deterministic parsers, human review, continuous intake, quality profiling, impact analysis, transparent decision operations, and accountable executive command workflows.
 
-## Live hosted experience
+## Hosted experience
 
-Production: https://workbench-studio-v7.vercel.app
+Production deployment is recorded in `DEPLOYMENT.md` after release. The hosted adapter uses representative browser-persisted data. Original evidence remains local unless the user explicitly exports or shares it.
 
-The hosted adapter uses representative browser-persisted data. Original evidence is processed only by the connected local agent.
+## v8 product loop
 
-## v7 product loop
+`Connect → Watch → Snapshot → Profile → Validate → Trace → Prioritize → Simulate → Gate → Explain → Approve → Brief → Handoff`
 
-`Connect → Watch → Snapshot → Profile → Validate → Trace → Prioritize → Compare to Baseline → Automate → Ask Evidence → Decide → Handoff`
+## Signature v8 functionality
 
-## Signature v7 functionality
+### Adaptive Command Queue
 
-### Decision Cockpit
+- Persists transparent queue policies and factor multipliers
+- Re-ranks evidence using risk, review state, impact, and SLA pressure
+- Shows rank, score, band, due time, SLA state, and every contributing reason
+- Supports one active queue policy per project
 
-- Transparent artifact priority scores
-- Explicit scoring factors for finding severity, privacy candidates, parser state, impact edges, and review status
-- Critical, high, medium, and low priority bands
-- Direct navigation from priority items to source artifacts
-- Advisory scoring only; evidence and human approval remain authoritative
+### Scenario Lab
 
-### Baseline Policy Center
+- Runs non-destructive remediation simulations
+- Projects readiness after explicit metric adjustments
+- Preserves the current and projected metric values, score delta, status, and recommendations
+- Never changes findings, reviews, baselines, approvals, or original evidence
 
-- Approve any immutable snapshot as a baseline
-- Generate default rules from accepted snapshot metrics
-- Define inspectable `<=`, `>=`, and `==` thresholds
-- Evaluate errors, warnings, parser failures, unsupported artifacts, inventory counts, privacy candidates, and other metrics
-- Classify results as Passed, Improved, Regressed, or Needs Approval
-- Persist complete per-rule outcomes and evaluation timestamps
+### Approval Gates
 
-### Automation Studio
+- Creates formal release or distribution controls for immutable snapshots
+- Evaluates deterministic requirements for errors, privacy candidates, parser failures, and baseline regressions
+- Blocks approval while required controls fail
+- Persists reviewer identity, rationale, status, and decision time
 
-- Compose reusable decision-readiness recipes
-- Supported steps include profiling, privacy scan, lineage rebuild, baseline evaluation, and triage ranking
-- Manual, hourly, daily, and on-snapshot triggers
-- Background worker executes due recipes against the latest completed immutable snapshot
-- Persisted progress, result summaries, failure state, enable/pause controls, and last-run timestamps
+### Explainability Studio
 
-### Evidence Assistant
+- Groups anomalies by artifact and source evidence
+- Separates observed behavior, expected state, causal drivers, impact, and corrective action
+- Keeps every explanation linked to findings, rule IDs, source locations, and excerpts
 
-- Ask concrete questions of the selected snapshot
-- Searches only local artifact metadata, bounded previews, and validation evidence
-- Returns source-linked citations with artifact, finding, source location, excerpt, and basis
-- Labels confidence from available supporting evidence
-- Never represents an unsupported inference as an observed fact
+### Executive Briefing
 
-### Handoff Brief Builder
+- Produces a readiness score and explicit decision status
+- Summarizes critical queue items, approval gates, baseline regressions, privacy posture, and top leadership priorities
+- Generates a ZIP containing HTML and JSON executive records
 
-- Generates a portable ZIP decision brief
-- Includes snapshot identity, transparent triage results, findings, baseline policies, data profiles, and provenance
-- Records generation time and safety notice
-- Leaves original evidence unchanged
+## Existing v7 capabilities retained
 
-## Existing v6 operations retained
-
-- Guided local-agent onboarding
-- Watch folders and incremental immutable snapshots
-- Data Quality Profiler
-- Lineage and Impact Studio
-- Investigation Playbooks
-- Privacy and Redaction Center
-- Evidence Workstation
-- Import Control Room
-- Caseboard
-- Query Lab
-- Rule Studio
-- Review Queue
-- Diff Studio
-- Relationship Map
-- Activity Timeline
-- Saved views and exports
+- Decision Cockpit, baselines, automation, Evidence Assistant, and decision handoff
+- Agent onboarding, watch folders, data profiling, lineage, playbooks, and privacy-safe exports
+- Evidence Workstation, import control room, Caseboard, Query Lab, Rule Studio, review queue, Diff Studio, relationship map, activity timeline, saved views, and exports
 
 ## Local architecture
 
 - UI: React 19 + TypeScript + Vite
 - Local agent: ASP.NET Core targeting .NET 10
 - Metadata: SQLite
-- Evidence storage: disk-backed originals, extraction cache, and exports
+- Evidence storage: disk-backed immutable originals, extraction cache, and exports
 - Parsers: JSON, CSV, XML, text/log, and XLSX
 - Tests: xUnit and Vitest
 
@@ -97,15 +75,11 @@ Open `http://localhost:5173`.
 .\scripts\build.ps1
 ```
 
-The script restores dependencies, runs backend and frontend tests, builds the Vite client, copies it into ASP.NET `wwwroot`, and publishes the combined local release.
-
 ## Safety boundary
 
 - Imported content is never executed.
-- ZIP extraction is path-bounded and resource-limited.
-- XML DTD processing and external resolution are prohibited.
-- Watch folders are copied into immutable staging; source folders are never modified.
-- Sensitive-value detections are candidates requiring human review.
-- Evidence Assistant answers remain citation-bound to the selected snapshot.
-- Priority scores and baseline results are decision aids, not authoritative facts.
-- Handoff briefs contain derived records and provenance; original evidence remains local unless explicitly shared.
+- Queue scores, scenarios, explanations, and executive readiness are advisory derivatives.
+- Scenario simulation never mutates source evidence or authoritative review records.
+- Approval requires every persisted deterministic requirement to pass.
+- Sensitive-value detections remain candidates requiring human review.
+- Executive briefs contain derived records and provenance, not original evidence bytes by default.

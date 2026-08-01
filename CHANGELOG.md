@@ -1,38 +1,18 @@
 # Changelog
 
+## 0.8.0 — 2026-08-01
+
+### Command intelligence
+
+- Added persisted adaptive queue policies with transparent multipliers and SLA windows.
+- Added adaptive queue ranking with due times, SLA state, and reason-level scoring.
+- Added persisted non-destructive scenario simulation and readiness projection.
+- Added formal approval gates with deterministic requirements and enforced approval blocking.
+- Added artifact-level anomaly explanations with observed, expected, driver, impact, evidence, and next-action fields.
+- Added executive readiness summaries and portable executive brief ZIP exports.
+- Added React Command Intelligence Center and five hosted v8 workflow surfaces.
+- Expanded hosted navigation from 24 to 29 product surfaces.
+
 ## 0.7.0 — 2026-08-01
 
-### Decision Cockpit
-
-- Added transparent smart-triage ranking with factor breakdowns.
-- Added priority bands and direct artifact navigation.
-- Added risk-factor aggregation across the highest-priority evidence.
-
-### Baseline policies
-
-- Added persisted approved-snapshot baseline policies.
-- Added default threshold generation from baseline metrics.
-- Added explicit rule evaluation and Passed, Improved, Regressed, or Needs Approval status.
-
-### Automation
-
-- Added persisted decision-readiness automation recipes.
-- Added profile, privacy, impact, baseline, and triage steps.
-- Added manual, hourly, daily, and on-snapshot triggers.
-- Added background recipe execution with progress and run summaries.
-
-### Evidence Assistant
-
-- Added local citation-first evidence questions.
-- Added ranked citations to findings and bounded artifact previews.
-- Added confidence labels and follow-up query suggestions.
-
-### Handoff
-
-- Added portable decision-brief ZIP export.
-- Added triage, findings, baselines, profiles, snapshot identity, and provenance records.
-
-### Hosted experience
-
-- Expanded the hosted product from 19 to 24 workflow surfaces.
-- Added dedicated Decision Cockpit, Baselines, Automation, Evidence Assistant, and Handoff experiences.
+- Added Decision Cockpit, approved baselines, automation recipes, Evidence Assistant, and decision handoff.

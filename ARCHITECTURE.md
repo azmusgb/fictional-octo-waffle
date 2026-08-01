@@ -1,8 +1,8 @@
-# Workbench Studio v7 architecture
+# Workbench Studio v8 architecture
 
 ## Core invariant
 
-Every derived profile, finding, privacy detection, lineage edge, priority factor, baseline result, automation result, evidence answer, review decision, and export must remain traceable to an immutable snapshot and its stored artifact identity.
+Every profile, finding, privacy detection, lineage edge, queue factor, scenario projection, approval requirement, anomaly explanation, baseline result, automation result, evidence answer, review decision, and export must remain traceable to an immutable snapshot and stored artifact identity.
 
 ## Runtime topology
 
@@ -11,61 +11,42 @@ Hosted or local React shell
         │ HTTP to approved local origin
         ▼
 ASP.NET Core local agent
-        ├── immutable import queue and parsers
+        ├── immutable import queue and deterministic parsers
         ├── watch-folder scheduler
-        ├── data profile service
-        ├── lineage and impact service
-        ├── privacy and redaction service
-        ├── investigation playbooks
-        ├── decision triage service
-        ├── baseline evaluation service
-        ├── automation recipe worker
-        ├── citation-first evidence assistant
-        └── portable decision brief builder
+        ├── profiles, lineage, privacy, and playbooks
+        ├── decision triage, baselines, and automation
+        ├── citation-first Evidence Assistant
+        ├── adaptive command queue policies
+        ├── non-destructive scenario simulation
+        ├── approval-gate enforcement
+        ├── anomaly explanation service
+        └── decision and executive brief builders
         │
         ├── SQLite metadata
         └── disk-backed originals, extracts, caches, and exports
 ```
 
-## Decision Operations data
+## Persisted v8 records
 
-### BaselinePolicies
+### QueuePolicies
 
-Stores the approved baseline snapshot, explicit metric rules, last evaluated snapshot, complete rule-level result JSON, status, and timestamps.
+Stores visible factor multipliers, SLA hours, active state, and timestamps. Queue ranks are calculated on demand from persisted evidence and the selected policy.
 
-### AutomationRecipes
+### ScenarioRuns
 
-Stores visible ordered steps, trigger mode, schedule interval, enable state, progress, status, last-run summary, and timestamps.
+Stores the immutable source snapshot, explicit metric assumptions, current/projected readiness, metric deltas, status, recommendations, and execution time. A scenario never changes source records.
 
-### Triage
+### ApprovalGates
 
-Triage is calculated on demand from persisted evidence. Each score is the sum of visible factors:
+Stores snapshot identity, gate type, required role, deterministic requirement evidence, status, reviewer, rationale, and decision timestamp. Approval is rejected by the API while any required control fails.
 
-- Error, warning, and informational findings
-- Open or confirmed privacy detections
-- Lineage and impact edges
-- Parser failure or unsupported status
-- Human review state
+## Calculated v8 products
 
-Scores are capped at 100 and mapped to priority bands. They are advisory and are not persisted as authoritative conclusions.
-
-### Evidence Assistant
-
-The default assistant is deterministic and local. It tokenizes the user question, ranks matching findings and bounded artifact previews, and returns citations. It does not use external inference or upload evidence.
-
-### Decision brief
-
-A ZIP derivative contains JSON records for snapshot identity, triage, findings, baselines, and profiles plus a safety notice. Original evidence bytes are not duplicated into the brief by default.
-
-## Automation trigger model
-
-The background recipe worker checks once per minute but enforces the configured minimum cadence:
-
-- `OnSnapshot`: latest completed snapshot is newer than the last run
-- `Hourly`: at least configured interval, minimum 60 minutes
-- `Daily`: at least configured interval, minimum 1,440 minutes
-- `Manual`: never runs automatically
+- Adaptive queue items combine triage factors, policy multipliers, and SLA state.
+- Anomaly explanations group findings into observed, expected, driver, impact, evidence, and next-action sections.
+- Executive summaries combine queue, approval, baseline, privacy, and snapshot metrics.
+- Executive brief ZIPs contain HTML and JSON derivatives without copying original evidence by default.
 
 ## Persistence compatibility
 
-Additive v7 tables use `CREATE TABLE IF NOT EXISTS` so existing v6 workspaces can open without data loss. A formal migration chain remains required before broad production distribution.
+V8 tables are additive and created with `CREATE TABLE IF NOT EXISTS`, allowing existing v7 workspaces to open without data deletion. A formal migration chain remains required before broad production distribution.
