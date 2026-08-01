@@ -1,26 +1,22 @@
-# Workbench Studio v8.2 customization deployment
+# Workbench Studio v8.3 portable-workspace deployment
 
-## Production
+## Production target
 
-- URL: https://workbench-studio-v8.vercel.app
-- Vercel project ID: `prj_0gUJSBVDQs2xuydpQurcpVa7cL27`
-- Production deployment ID: `dpl_EUgcRNfDSkYGzSSyxKDzZjjTLGkB`
-- Immutable application source commit: `944e95f6065495eeebbbbb066603e975dc8c2bdd`
-- Region: `iad1`
+- Existing URL: https://workbench-studio-v8.vercel.app
+- Existing Vercel project ID: `prj_0gUJSBVDQs2xuydpQurcpVa7cL27`
+- Target release: Workbench Studio v8.3 Portable Workspace
+- Source state: validated release candidate pending immutable GitHub merge
 
 ## Delivery model
 
-The production project serves a small Safari-compatible loader. It fetches the complete `hosted/index.html` from the immutable source commit above, validates the Workbench Studio v8.2 identity, and replaces the loading document.
+The production project serves a small Safari-compatible loader. After the feature merge, the loader will be pinned to the immutable v8.3 merge commit containing `hosted/index.html`. Browser gzip/base64 decoding, `atob`, and `DecompressionStream` remain absent.
 
-The loader includes `viewport-fit=cover`, Apple standalone-app metadata, and iPhone safe-area padding. It does not use browser base64 decoding, gzip decompression, `atob`, or `DecompressionStream`. Responses use `Cache-Control: no-store, max-age=0` and `X-Content-Type-Options: nosniff`.
+## Scope
 
-## Verification
+- Named workspace profiles
+- Guided role onboarding
+- Checksum-protected export, share, clipboard transfer, selective import, and preview
+- Preference schema migration, backup, diagnostics, category reset, and recovery
+- Explicit provider boundary for continuous synchronization
 
-- Deployment state: `READY`
-- Production alias returned HTTP 200
-- Loader points to the immutable v8.2 source commit
-- Mobile viewport and safe-area metadata are present
-- No compressed-browser transport is present
-- Vercel runtime-error clusters after deployment: none detected
-
-The hosted application uses representative browser-persisted data. User preferences remain browser-local and separate from authoritative evidence, findings, policies, approvals, and audit records. Real evidence processing and governed persistence remain local-agent responsibilities.
+Final deployment identifiers and runtime verification will be recorded after production deployment.

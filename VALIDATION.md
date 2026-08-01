@@ -1,4 +1,4 @@
-# Workbench Studio v8.2 validation record
+# Workbench Studio v8.3 validation record
 
 ## Completed in this environment
 
@@ -73,3 +73,16 @@
 - Loader source is pinned to the immutable v8.2 merge commit.
 - Browser gzip/base64 decoding, `atob`, and `DecompressionStream`: absent.
 - Runtime error clusters after deployment: none detected.
+
+
+## v8.3 portable-workspace validation
+
+- Preference schema migrated from version 1 to version 2 with legacy recovery.
+- Named built-in and custom profiles support apply, save, update, and delete.
+- Export packages are checksum-protected and exclude evidence and governed records.
+- Import validates package identity and checksum and supports category-level preview and apply.
+- Automatic preference backup, restore, category reset, diagnostics export, and onboarding restart are implemented.
+- Guided role presets cover investigator, reviewer, approver, operations, and executive workflows.
+- Hosted embedded JavaScript passed syntax validation after the portable-workspace additions.
+- React preference and customization sources passed strict TypeScript checking with local compatibility declarations before materialization.
+- Continuous cloud synchronization is explicitly disabled until an authenticated storage provider is available.

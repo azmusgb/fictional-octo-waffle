@@ -29,3 +29,8 @@ Version 8.1 does not add another workflow domain. It makes the existing command-
 ## v8.2 personal workspace
 
 V8.2 makes the command-intelligence workbench adaptable without weakening its evidence model. User-owned preferences control navigation, dashboard composition, accessibility, queue presentation, alerts, and safe shortcuts. Authoritative evidence, deterministic findings, policy outcomes, and approvals are explicitly outside the preference boundary.
+
+
+## v8.3 portable workspace
+
+V8.3 makes personalization durable: users can select a guided role preset, save named workspace profiles, transfer selected settings between devices, inspect migration and storage diagnostics, and recover from a corrupt or unwanted preference state. Continuous cloud synchronization remains outside the release until authenticated storage and conflict semantics exist.
