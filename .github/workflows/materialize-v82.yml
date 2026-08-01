@@ -1,0 +1,49 @@
+name: Materialize Workbench Studio v8.2
+
+on:
+  push:
+    branches:
+      - workbench-studio-v8-2-customization
+    paths:
+      - .github/workflows/materialize-v82.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out release branch
+        uses: actions/checkout@v4
+        with:
+          ref: workbench-studio-v8-2-customization
+          fetch-depth: 0
+
+      - name: Download and verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 'https://at.adobe.com/kgkc0mchHoC5sE5i' -o /tmp/workbench-v82.zip
+          echo 'ac1364cd180343e3d21e423cbd11a2eadcebf2be00e1913eddf3933701bc8ab6  /tmp/workbench-v82.zip' | sha256sum -c -
+          rm -rf /tmp/workbench-v82
+          mkdir -p /tmp/workbench-v82
+          unzip -q /tmp/workbench-v82.zip -d /tmp/workbench-v82
+          test -f /tmp/workbench-v82/WorkbenchStudio-v8/client/src/components/CustomizationCenter.tsx
+          test -f /tmp/workbench-v82/WorkbenchStudio-v8/client/src/lib/userPreferences.ts
+          test -f /tmp/workbench-v82/WorkbenchStudio-v8/hosted/index.html
+          grep -q 'Workbench Studio v8.2' /tmp/workbench-v82/WorkbenchStudio-v8/hosted/index.html
+
+      - name: Replace branch with verified source tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          rsync -a --delete --exclude='.git/' --exclude='.github/' /tmp/workbench-v82/WorkbenchStudio-v8/ ./
+          rm -f .github/workflows/materialize-v82.yml
+          rmdir .github/workflows 2>/dev/null || true
+          rmdir .github 2>/dev/null || true
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Materialize Workbench Studio v8.2 customization source'
+          git push origin HEAD:workbench-studio-v8-2-customization
