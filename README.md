@@ -8,6 +8,20 @@ Production: https://workbench-studio-v8.vercel.app
 
 The hosted adapter uses representative browser-persisted data. Original evidence remains local unless the user explicitly exports or shares it.
 
+## Mobile-first v8.1 experience
+
+The v8.1 shell is optimized for phones without removing desktop functionality:
+
+- Four persistent mobile tabs plus an all-workspaces navigation sheet
+- Safe-area-aware top and bottom chrome for modern iPhones
+- Full-screen artifact inspector and slide-in evidence tree
+- Touch-friendly review and query cards
+- Scrollable workspace tabs and compact command controls
+- Bottom-sheet dialogs and command palette
+- Responsive command queue, scenarios, approvals, explainability, and executive briefing
+
+The hosted experience remains representative. Real evidence, persistence, approvals, and exports remain local-agent responsibilities.
+
 ## v8 product loop
 
 `Connect → Watch → Snapshot → Profile → Validate → Trace → Prioritize → Simulate → Gate → Explain → Approve → Brief → Handoff`

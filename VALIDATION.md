@@ -34,3 +34,14 @@
 - The .NET SDK is not installed in this execution environment, so ASP.NET compilation and xUnit execution could not be performed here.
 - The internal npm registry does not provide the required React packages, so the dependency-backed Vite build and Vitest could not be performed here.
 - `scripts/build.ps1` remains the definitive restore, compile, test, bundle, and publish validation on the development machine.
+
+
+## v8.1 mobile validation
+
+- Hosted HTML parsed after mobile metadata, navigation, drawer, and card-table changes.
+- Embedded hosted JavaScript passed `node --check`.
+- React source passed strict TypeScript checking using local compatibility declarations.
+- Mobile navigation exposes four primary tabs plus all 29 workspaces through the More sheet.
+- Artifact tree and inspector remain accessible on screens at or below 760 pixels.
+- iOS safe-area, 44-pixel touch-target, and 16-pixel form-control rules are present.
+- Desktop navigation and local-agent APIs remain unchanged.
