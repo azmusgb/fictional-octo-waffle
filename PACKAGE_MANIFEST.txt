@@ -105,6 +105,7 @@ server/WorkbenchStudio.Api/Services/WorkspaceOptions.cs
 server/WorkbenchStudio.Api/WorkbenchStudio.Api.csproj
 server/WorkbenchStudio.Api/appsettings.json
 tests/WorkbenchStudio.Api.Tests/FileStorageServiceTests.cs
+tests/WorkbenchStudio.Api.Tests/GlobalUsings.cs
 tests/WorkbenchStudio.Api.Tests/ParserTests.cs
 tests/WorkbenchStudio.Api.Tests/WorkbenchStudio.Api.Tests.csproj
 vercel.json
