@@ -74,7 +74,6 @@
 - Browser gzip/base64 decoding, `atob`, and `DecompressionStream`: absent.
 - Runtime error clusters after deployment: none detected.
 
-
 ## v8.3 portable-workspace validation
 
 - Preference schema migrated from version 1 to version 2 with legacy recovery.
@@ -86,3 +85,21 @@
 - Hosted embedded JavaScript passed syntax validation after the portable-workspace additions.
 - React preference and customization sources passed strict TypeScript checking with local compatibility declarations before materialization.
 - Continuous cloud synchronization is explicitly disabled until an authenticated storage provider is available.
+
+## v8.3 connected delivery verification
+
+- Source pull request: `#10`.
+- Corrected materialization payload SHA-256: `b400262946266e05b2ecdfc9d884aeac8fd74aab0bfc1c6d1c519b82988aea3d`.
+- GitHub materialization workflow run: `30721985479`.
+- Immutable application source commit: `0d3590b7934846aee298ef545c4d34da6f6418d0`.
+- Production loader commit: `bcec47329122d1dd6075738e881f8d1ddf67356b`.
+- Vercel project: `workbench-studio-v8`.
+- Vercel project ID: `prj_0gUJSBVDQs2xuydpQurcpVa7cL27`.
+- Production deployment: `dpl_B2L627YDMhMmL8qCBHvTpRNjcrjb`.
+- Production state: `READY`.
+- Production alias: https://workbench-studio-v8.vercel.app
+- Production response: HTTP 200.
+- Response cache policy: `no-store, max-age=0`.
+- Loader source is pinned to the immutable v8.3 merge commit.
+- Browser gzip/base64 decoding, `atob`, and `DecompressionStream`: absent.
+- Runtime error clusters after deployment: none detected.
