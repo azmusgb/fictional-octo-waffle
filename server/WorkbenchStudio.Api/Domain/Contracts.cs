@@ -195,3 +195,64 @@ public sealed record LineageEdgeDto(
     string Label,
     JsonElement? Evidence);
 public sealed record UpdatePrivacyDetectionRequest(string Status);
+
+public sealed record BaselineRuleDto(string Metric, string Operator, double Value, string Severity);
+public sealed record CreateBaselinePolicyRequest(string Name, Guid BaselineImportId, IReadOnlyList<BaselineRuleDto>? Rules);
+public sealed record BaselinePolicyDto(
+    Guid Id,
+    Guid ProjectId,
+    string Name,
+    Guid BaselineImportId,
+    IReadOnlyList<BaselineRuleDto> Rules,
+    string Status,
+    Guid? LastEvaluatedImportId,
+    JsonElement? LastResult,
+    DateTimeOffset? LastEvaluatedAtUtc);
+public sealed record BaselineEvaluationDto(
+    Guid PolicyId,
+    Guid BaselineImportId,
+    Guid CurrentImportId,
+    string Status,
+    int PassedRules,
+    int FailedRules,
+    IReadOnlyList<BaselineRuleResultDto> Results,
+    DateTimeOffset EvaluatedAtUtc);
+public sealed record BaselineRuleResultDto(string Metric, string Operator, double Expected, double Actual, bool Passed, string Severity, string Message);
+
+public sealed record AutomationStepDto(string Id, string Name, string Type, bool Required, JsonElement? Configuration);
+public sealed record CreateAutomationRecipeRequest(
+    string Name,
+    string Description,
+    IReadOnlyList<AutomationStepDto> Steps,
+    string? TriggerMode,
+    int? ScheduleIntervalMinutes);
+public sealed record UpdateAutomationRecipeRequest(bool? Enabled, string? TriggerMode, int? ScheduleIntervalMinutes);
+public sealed record AutomationRecipeDto(
+    Guid Id,
+    Guid ProjectId,
+    string Name,
+    string Description,
+    IReadOnlyList<AutomationStepDto> Steps,
+    bool Enabled,
+    string TriggerMode,
+    int ScheduleIntervalMinutes,
+    string Status,
+    int ProgressPercent,
+    string? LastRunSummary,
+    DateTimeOffset? LastRunAtUtc);
+
+public sealed record TriageFactorDto(string Name, int Points, string Explanation);
+public sealed record TriageItemDto(
+    Guid ArtifactId,
+    string ArtifactPath,
+    int PriorityScore,
+    string PriorityBand,
+    string ReviewStatus,
+    int FindingCount,
+    int ImpactCount,
+    int PrivacyCount,
+    IReadOnlyList<TriageFactorDto> Factors);
+
+public sealed record EvidenceQuestionRequest(string Question, int? MaximumCitations);
+public sealed record EvidenceCitationDto(Guid? ArtifactId, Guid? FindingId, string ArtifactPath, string? SourceLocation, string Excerpt, string Basis);
+public sealed record EvidenceAnswerDto(string Answer, string Confidence, IReadOnlyList<EvidenceCitationDto> Citations, IReadOnlyList<string> FollowUpQueries);

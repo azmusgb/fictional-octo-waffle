@@ -19,6 +19,8 @@ const navigation: Array<{ view: ViewId; label: string; description: string; key:
   { view: 'inventory', label: 'Open inventory', description: 'Table and hierarchy explorer', key: 'G I' },
   { view: 'findings', label: 'Open findings', description: 'Validation evidence and recommendations', key: 'G F' },
   { view: 'compare', label: 'Compare snapshots', description: 'Added, removed, and modified artifacts', key: 'G C' },
+  { view: 'operations', label: 'Open operations', description: 'Watches, profiles, impact, playbooks, and privacy', key: 'G P' },
+  { view: 'decisions', label: 'Open decision center', description: 'Triage, baselines, automation, evidence answers, and handoff', key: 'G D' },
   { view: 'exports', label: 'Open exports', description: 'Generate HTML, CSV, and JSON reports', key: 'G E' },
 ];
 

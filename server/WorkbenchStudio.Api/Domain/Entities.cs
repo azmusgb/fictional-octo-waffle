@@ -223,3 +223,54 @@ public sealed class PlaybookEntity
     public DateTimeOffset CreatedAtUtc { get; set; }
     public DateTimeOffset UpdatedAtUtc { get; set; }
 }
+
+public enum BaselineEvaluationStatus
+{
+    NotRun,
+    Passed,
+    Improved,
+    Regressed,
+    NeedsApproval
+}
+
+public enum AutomationRecipeStatus
+{
+    Ready,
+    Running,
+    Completed,
+    CompletedWithWarnings,
+    Failed
+}
+
+public sealed class BaselinePolicyEntity
+{
+    public Guid Id { get; set; }
+    public Guid ProjectId { get; set; }
+    public required string Name { get; set; }
+    public Guid BaselineImportId { get; set; }
+    public required string RulesJson { get; set; }
+    public BaselineEvaluationStatus Status { get; set; } = BaselineEvaluationStatus.NotRun;
+    public Guid? LastEvaluatedImportId { get; set; }
+    public string? LastResultJson { get; set; }
+    public DateTimeOffset? LastEvaluatedAtUtc { get; set; }
+    public DateTimeOffset CreatedAtUtc { get; set; }
+    public DateTimeOffset UpdatedAtUtc { get; set; }
+}
+
+public sealed class AutomationRecipeEntity
+{
+    public Guid Id { get; set; }
+    public Guid ProjectId { get; set; }
+    public required string Name { get; set; }
+    public required string Description { get; set; }
+    public required string StepsJson { get; set; }
+    public bool Enabled { get; set; } = true;
+    public string TriggerMode { get; set; } = "Manual";
+    public int ScheduleIntervalMinutes { get; set; } = 1440;
+    public AutomationRecipeStatus Status { get; set; } = AutomationRecipeStatus.Ready;
+    public int ProgressPercent { get; set; }
+    public string? LastRunSummary { get; set; }
+    public DateTimeOffset? LastRunAtUtc { get; set; }
+    public DateTimeOffset CreatedAtUtc { get; set; }
+    public DateTimeOffset UpdatedAtUtc { get; set; }
+}

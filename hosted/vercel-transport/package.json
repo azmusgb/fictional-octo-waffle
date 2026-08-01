@@ -1,1 +1,5 @@
-{"name":"workbench-studio-v6-loader","version":"0.6.0","private":true}
+{
+  "name": "workbench-studio-v7",
+  "version": "0.7.0",
+  "private": true
+}

@@ -16,6 +16,13 @@ import type {
   PrivacyDetection,
   Playbook,
   PlaybookStep,
+  TriageItem,
+  BaselinePolicy,
+  BaselineEvaluation,
+  BaselineRule,
+  AutomationRecipe,
+  AutomationStep,
+  EvidenceAnswer,
 } from './types';
 
 export class ApiError extends Error {
@@ -125,4 +132,14 @@ export const api = {
   getPlaybooks: (projectId: string) => request<Playbook[]>(`/api/projects/${projectId}/playbooks`),
   createPlaybook: (projectId: string, input: { name: string; description: string; steps: PlaybookStep[] }) => request<Playbook>(`/api/projects/${projectId}/playbooks`, { method: 'POST', body: JSON.stringify(input) }),
   runPlaybook: (projectId: string, playbookId: string, importId: string) => request<Playbook>(`/api/projects/${projectId}/playbooks/${playbookId}/run/${importId}`, { method: 'POST' }),
+  getTriage: (projectId: string, importId: string) => request<TriageItem[]>(`/api/projects/${projectId}/imports/${importId}/triage`),
+  getBaselines: (projectId: string) => request<BaselinePolicy[]>(`/api/projects/${projectId}/baselines`),
+  createBaseline: (projectId: string, input: { name: string; baselineImportId: string; rules?: BaselineRule[] }) => request<BaselinePolicy>(`/api/projects/${projectId}/baselines`, { method: 'POST', body: JSON.stringify(input) }),
+  evaluateBaseline: (projectId: string, policyId: string, importId: string) => request<BaselineEvaluation>(`/api/projects/${projectId}/baselines/${policyId}/evaluate/${importId}`, { method: 'POST' }),
+  getAutomationRecipes: (projectId: string) => request<AutomationRecipe[]>(`/api/projects/${projectId}/automation-recipes`),
+  createAutomationRecipe: (projectId: string, input: { name: string; description: string; steps: AutomationStep[]; triggerMode?: string; scheduleIntervalMinutes?: number }) => request<AutomationRecipe>(`/api/projects/${projectId}/automation-recipes`, { method: 'POST', body: JSON.stringify(input) }),
+  updateAutomationRecipe: (projectId: string, recipeId: string, input: Partial<{ enabled: boolean; triggerMode: string; scheduleIntervalMinutes: number }>) => request<AutomationRecipe>(`/api/projects/${projectId}/automation-recipes/${recipeId}`, { method: 'PATCH', body: JSON.stringify(input) }),
+  runAutomationRecipe: (projectId: string, recipeId: string, importId: string) => request<AutomationRecipe>(`/api/projects/${projectId}/automation-recipes/${recipeId}/run/${importId}`, { method: 'POST' }),
+  askEvidence: (projectId: string, importId: string, question: string, maximumCitations = 6) => request<EvidenceAnswer>(`/api/projects/${projectId}/imports/${importId}/evidence-assistant/ask`, { method: 'POST', body: JSON.stringify({ question, maximumCitations }) }),
+  decisionBriefUrl: (projectId: string, importId: string) => url(`/api/projects/${projectId}/imports/${importId}/decision-brief`),
 };

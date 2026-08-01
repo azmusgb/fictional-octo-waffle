@@ -1,17 +1,22 @@
 # Workbench Studio evolution
 
-## v6 product shift
+## v7 product shift
 
-Version 5 organized investigations after evidence was imported. Version 6 adds the operational loop that precedes and follows investigation:
+Version 6 made evidence operations continuous. Version 7 makes the resulting work decisional: users can identify what matters, prove regression against explicit policy, automate readiness checks, ask bounded evidence questions, and transfer a complete decision record.
 
-`Connect → Watch → Snapshot → Profile → Validate → Trace Impact → Investigate → Redact → Export → Repeat`
+## Signature experiences
+
+1. Decision Cockpit
+2. Baseline Policy Center
+3. Automation Studio
+4. Evidence Assistant
+5. Handoff Brief Builder
 
 ## Design principles
 
-- **Continuous, not noisy:** watches create snapshots only when fingerprints change.
-- **Immutable intake:** watched source folders are never changed; each detected state becomes a separate import.
-- **Profile before inspection:** users see dataset-level quality and drift before navigating individual records.
-- **Explain impact:** changes are connected to rules, findings, cases, and reports through explicit lineage edges.
-- **Repeatable work:** playbooks record deterministic steps and outcomes.
-- **Share safely:** sensitive values are detected locally and removed only from derivative exports.
-- **Evidence remains authoritative:** scores, profiles, and impact summaries remain navigational aids linked to source artifacts.
+- **Explain every priority:** no black-box queue ranking.
+- **Policy before opinion:** regressions are measured against explicit rules.
+- **Automate repeatable work:** every step, trigger, result, and failure remains visible.
+- **Citations before answers:** evidence questions return inspectable sources.
+- **Portable decisions:** handoff packages preserve provenance and safety boundaries.
+- **Human authority:** automated results prioritize and organize; they do not approve evidence.

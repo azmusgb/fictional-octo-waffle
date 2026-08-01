@@ -1,4 +1,4 @@
-export type ViewId = 'overview' | 'inventory' | 'review' | 'findings' | 'compare' | 'operations' | 'exports' | 'system';
+export type ViewId = 'overview' | 'inventory' | 'review' | 'findings' | 'compare' | 'operations' | 'decisions' | 'exports' | 'system';
 export type InventoryViewMode = 'table' | 'tree';
 export type ArtifactSort = 'path' | 'size-desc' | 'findings-desc' | 'status';
 
@@ -238,3 +238,30 @@ export interface Playbook {
   lastRunSummary: string | null;
   lastRunAtUtc: string | null;
 }
+
+
+export interface TriageFactor { name: string; points: number; explanation: string; }
+export interface TriageItem {
+  artifactId: string; artifactPath: string; priorityScore: number; priorityBand: string; reviewStatus: ReviewStatus;
+  findingCount: number; impactCount: number; privacyCount: number; factors: TriageFactor[];
+}
+
+export interface BaselineRule { metric: string; operator: '<=' | '>=' | '=='; value: number; severity: 'Error' | 'Warning' | string; }
+export interface BaselineRuleResult { metric: string; operator: '<=' | '>=' | '=='; expected: number; actual: number; passed: boolean; severity: 'Error' | 'Warning' | string; message: string; }
+export interface BaselinePolicy {
+  id: string; projectId: string; name: string; baselineImportId: string; rules: BaselineRule[]; status: string;
+  lastEvaluatedImportId: string | null; lastResult: unknown | null; lastEvaluatedAtUtc: string | null;
+}
+export interface BaselineEvaluation {
+  policyId: string; baselineImportId: string; currentImportId: string; status: string; passedRules: number; failedRules: number;
+  results: BaselineRuleResult[]; evaluatedAtUtc: string;
+}
+
+export interface AutomationStep { id: string; name: string; type: string; required: boolean; configuration?: Record<string, unknown> | null; }
+export interface AutomationRecipe {
+  id: string; projectId: string; name: string; description: string; steps: AutomationStep[]; enabled: boolean; triggerMode: string;
+  scheduleIntervalMinutes: number; status: string; progressPercent: number; lastRunSummary: string | null; lastRunAtUtc: string | null;
+}
+
+export interface EvidenceCitation { artifactId: string | null; findingId: string | null; artifactPath: string; sourceLocation: string | null; excerpt: string; basis: string; }
+export interface EvidenceAnswer { answer: string; confidence: string; citations: EvidenceCitation[]; followUpQueries: string[]; }
