@@ -37,7 +37,6 @@
 - The internal npm registry does not provide the required React packages, so the dependency-backed Vite build and Vitest could not be performed here.
 - `scripts/build.ps1` remains the definitive restore, compile, test, bundle, and publish validation on the development machine.
 
-
 ## v8.1 mobile validation
 
 - Hosted HTML parsed after mobile metadata, navigation, drawer, and card-table changes.
@@ -47,7 +46,6 @@
 - Artifact tree and inspector remain accessible on screens at or below 760 pixels.
 - iOS safe-area, 44-pixel touch-target, and 16-pixel form-control rules are present.
 - Desktop navigation and local-agent APIs remain unchanged.
-
 
 ## v8.2 customization validation
 
@@ -60,3 +58,18 @@
 - Display profiles, device theme, text scale, contrast, motion, handedness, queue defaults, alerts, and safe quick actions are persisted.
 - Package JSON and MSBuild XML remain valid.
 - Dependency-backed Vite/Vitest and ASP.NET/xUnit remain development-machine release gates because dependencies and the .NET SDK are unavailable in this environment.
+
+## v8.2 connected delivery verification
+
+- Source pull request: `#9`.
+- Immutable application source commit: `944e95f6065495eeebbbbb066603e975dc8c2bdd`.
+- Vercel project: `workbench-studio-v8`.
+- Vercel project ID: `prj_0gUJSBVDQs2xuydpQurcpVa7cL27`.
+- Production deployment: `dpl_EUgcRNfDSkYGzSSyxKDzZjjTLGkB`.
+- Production state: `READY`.
+- Production alias: https://workbench-studio-v8.vercel.app
+- Production response: HTTP 200.
+- Response cache policy: `no-store, max-age=0`.
+- Loader source is pinned to the immutable v8.2 merge commit.
+- Browser gzip/base64 decoding, `atob`, and `DecompressionStream`: absent.
+- Runtime error clusters after deployment: none detected.
