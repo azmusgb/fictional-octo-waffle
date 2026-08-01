@@ -1,4 +1,4 @@
-# Workbench Studio v8.2 hosted adapter
+# Workbench Studio v8.4 hosted adapter
 
 `index.html` is a self-contained interactive demonstration of all 29 v8 workflow surfaces with a phone-first navigation and evidence-inspection layer. It persists demo decisions in browser local storage and never uploads original evidence.
 
@@ -13,3 +13,7 @@ The hosted adapter now persists configurable phone tabs, dashboard composition, 
 ## v8.3 portable workspace
 
 The hosted adapter includes named profiles, guided onboarding, checksum-protected preference transfer, selective import, local diagnostics, category reset, and backup recovery. These browser-local features do not include or mutate evidence and do not claim continuous cloud synchronization.
+## v8.4 rich experience
+
+The hosted adapter now mirrors the React decision-posture hero, layered navigation, richer portable-workspace summaries, and responsive interaction polish. The adapter remains representative and browser-persisted; authoritative evidence processing stays with the local agent.
+

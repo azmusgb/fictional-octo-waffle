@@ -68,7 +68,7 @@ export interface PreferencesPackage {
   format: 'workbench-studio-preferences';
   packageVersion: 1;
   schemaVersion: 2;
-  appVersion: '0.8.3';
+  appVersion: string;
   exportedAt: string;
   deviceLabel: string;
   categories: PreferenceCategory[];
@@ -557,7 +557,7 @@ export function createPreferencesPackage(preferences: UserPreferences, categorie
     format: 'workbench-studio-preferences',
     packageVersion: 1,
     schemaVersion: 2,
-    appVersion: '0.8.3',
+    appVersion: '0.8.4',
     exportedAt: new Date().toISOString(),
     deviceLabel: deviceLabel.trim().slice(0, 80) || 'Workbench Studio device',
     categories: selected,
@@ -574,7 +574,7 @@ export function serializePreferencesPackage(pkg: PreferencesPackage): string {
 export function parsePreferencesPackage(raw: string): PreferencesPackage {
   const parsed = JSON.parse(raw) as Partial<PreferencesPackage>;
   if (parsed.format !== 'workbench-studio-preferences' || parsed.packageVersion !== 1 || parsed.schemaVersion !== 2) {
-    throw new Error('This file is not a supported Workbench Studio v8.3 preference package.');
+    throw new Error('This file is not a supported Workbench Studio portable preference package.');
   }
   const categories = uniqueAllowed(parsed.categories, PREFERENCE_CATEGORIES);
   if (categories.length === 0) throw new Error('The preference package does not contain importable categories.');
@@ -582,7 +582,7 @@ export function parsePreferencesPackage(raw: string): PreferencesPackage {
     format: 'workbench-studio-preferences',
     packageVersion: 1,
     schemaVersion: 2,
-    appVersion: '0.8.3',
+    appVersion: typeof parsed.appVersion === 'string' ? parsed.appVersion : '0.8.3',
     exportedAt: typeof parsed.exportedAt === 'string' ? parsed.exportedAt : new Date().toISOString(),
     deviceLabel: typeof parsed.deviceLabel === 'string' ? parsed.deviceLabel : 'Imported device',
     categories,
@@ -664,7 +664,7 @@ export function getPreferenceDiagnostics(preferences: UserPreferences): Preferen
 export function serializePreferenceDiagnostics(preferences: UserPreferences): string {
   return `${JSON.stringify({
     product: 'Workbench Studio',
-    version: '0.8.3',
+    version: '0.8.4',
     generatedAt: new Date().toISOString(),
     diagnostics: getPreferenceDiagnostics(preferences),
     categories: PREFERENCE_CATEGORIES,

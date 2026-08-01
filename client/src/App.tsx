@@ -12,6 +12,7 @@ import { OperationsCenter } from './components/OperationsCenter';
 import { ReviewQueue } from './components/ReviewQueue';
 import { StatusBadge } from './components/StatusBadge';
 import { SystemCenter } from './components/SystemCenter';
+import { WorkspaceHero } from './components/WorkspaceHero';
 import { WorkspaceInsights } from './components/WorkspaceInsights';
 import { api } from './lib/api';
 import { formatBytes, formatDate, isActiveImport, progressPercent, severityRank } from './lib/format';
@@ -393,7 +394,7 @@ function App() {
       <header className="topbar">
         <div className="brand-lockup">
           <div className="brand-mark" aria-hidden="true">W</div>
-          <div><strong>Workbench Studio</strong><span>Personal mobile command · v8.2</span></div>
+          <div><strong>Workbench Studio</strong><span>Rich evidence workspace · v8.4</span></div>
         </div>
 
         <div className="topbar-center">
@@ -483,16 +484,16 @@ function App() {
           </section>
         ) : (
           <>
-            <section className="page-header">
+            {view !== 'overview' ? <section className="page-header">
               <div>
                 <span className="eyebrow">{navItems.find((item) => item.id === view)?.description}</span>
-                <h1>{view === 'overview' ? selectedProject.name : navItems.find((item) => item.id === view)?.label}</h1>
-                <p>{view === 'overview' ? `${imports.length.toLocaleString()} immutable snapshot${imports.length === 1 ? '' : 's'} · updated ${formatDate(selectedProject.updatedAtUtc)}` : pageDescriptions[view]}</p>
+                <h1>{navItems.find((item) => item.id === view)?.label}</h1>
+                <p>{pageDescriptions[view]}</p>
               </div>
               {imports.length > 0 && view !== 'compare' ? (
                 <label className="snapshot-select field-label">Snapshot<select value={selectedImportId ?? ''} onChange={(event: ChangeEvent<HTMLSelectElement>) => setSelectedImportId(event.target.value)}>{imports.map((item) => <option key={item.id} value={item.id}>{item.displayName}</option>)}</select></label>
               ) : null}
-            </section>
+            </section> : null}
 
             <nav className="mobile-quick-actions" aria-label="Personal quick actions">
               {preferences.quickActions.map((action) => <button key={action} type="button" onClick={() => runQuickAction(action)}>{quickActionMeta[action].symbol}<span>{quickActionMeta[action].label}</span></button>)}
@@ -501,7 +502,20 @@ function App() {
             {loadingWorkspace && imports.length === 0 ? <div className="panel-loading">Loading project workspace…</div> : null}
 
             {view === 'overview' ? (
-              <div className="page-stack">
+              <div className="page-stack rich-overview-stack">
+                <WorkspaceHero
+                  project={selectedProject}
+                  imports={imports}
+                  selectedImport={selectedImport}
+                  selectedImportId={selectedImportId}
+                  insights={insights}
+                  findings={findings}
+                  activeProfileName={preferences.profiles.find((item) => item.id === preferences.activeProfileId)?.name ?? 'Custom workspace'}
+                  onSelectImport={setSelectedImportId}
+                  onNavigate={navigate}
+                  onCustomize={() => setCustomizationOpen(true)}
+                  onOpenCommand={() => setCommandOpen(true)}
+                />
                 {!preferences.dashboard.hidden.includes('metrics') ? <section className="metrics-grid dashboard-widget" style={{ order: preferences.dashboard.order.indexOf('metrics') }}>
                   <MetricCard label="Health score" value={selectedImport ? insights.healthScore : '—'} detail={selectedImport ? insights.healthLabel : 'Import a snapshot'} tone={insights.healthScore >= 75 ? 'success' : insights.healthScore >= 55 ? 'warning' : selectedImport ? 'danger' : 'default'} />
                   <MetricCard label="Parse coverage" value={selectedImport ? `${insights.parseCoveragePercent}%` : '—'} detail={`${insights.parsedCount.toLocaleString()} parsed · ${insights.unsupportedCount.toLocaleString()} unsupported`} tone="success" />

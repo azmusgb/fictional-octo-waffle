@@ -54,6 +54,14 @@ interface CustomizationCenterProps {
 
 type CenterTab = 'guide' | 'customize' | 'profiles' | 'transfer' | 'recovery';
 
+const centerTabMeta: Record<CenterTab, { label: string; detail: string; symbol: string }> = {
+  guide: { label: 'Guided setup', detail: 'Start from your role', symbol: '◎' },
+  customize: { label: 'Customize', detail: 'Shape the workspace', symbol: '✦' },
+  profiles: { label: 'Profiles', detail: 'Save working modes', symbol: '▣' },
+  transfer: { label: 'Transfer', detail: 'Move settings safely', symbol: '⇱' },
+  recovery: { label: 'Recovery', detail: 'Diagnose and restore', symbol: '↶' },
+};
+
 const dashboardLabels: Record<DashboardWidgetId, string> = {
   metrics: 'Readiness metrics',
   processing: 'Active processing',
@@ -195,7 +203,7 @@ export function CustomizationCenter({ open, preferences, navigationOptions, onCh
     const file = new File([text], filename, { type: 'application/json' });
     if (useShareSheet && navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }))) {
       try {
-        await navigator.share({ title: 'Workbench Studio preferences', text: 'Portable Workbench Studio v8.3 preference package.', files: [file] });
+        await navigator.share({ title: 'Workbench Studio preferences', text: 'Portable Workbench Studio v8.4 preference package.', files: [file] });
         update(markPreferencesExported(preferences), 'Preference package shared.');
         return;
       } catch (error) {
@@ -262,18 +270,19 @@ export function CustomizationCenter({ open, preferences, navigationOptions, onCh
     <div className="customization-backdrop" role="presentation" onMouseDown={(event: ReactMouseEvent<HTMLDivElement>) => { if (event.target === event.currentTarget) onClose(); }}>
       <section className="customization-panel portable-workspace-panel" role="dialog" aria-modal="true" aria-labelledby="customization-heading">
         <header className="customization-header">
-          <div><span className="eyebrow">Portable workspace · v8.3</span><h2 id="customization-heading">Personalize, transfer, and recover</h2><p>Preferences remain separate from evidence, findings, policies, approvals, and audit records.</p></div>
+          <div><span className="eyebrow">Portable workspace · v8.4 experience</span><h2 id="customization-heading">Your workspace, shaped around the decision</h2><p>Personalize presentation, move selected settings between devices, and recover safely. Evidence, findings, policies, approvals, and audit records remain governed and separate.</p></div>
           <button type="button" className="icon-button" aria-label="Close customization" onClick={onClose}>×</button>
         </header>
 
+        <div className="portable-summary-strip" aria-label="Preference state summary">
+          <div><span>Active profile</span><strong>{preferences.profiles.find((item) => item.id === preferences.activeProfileId)?.name ?? 'Custom workspace'}</strong></div>
+          <div><span>Guided setup</span><strong>{preferences.onboarding.complete ? 'Complete' : 'Recommended next'}</strong></div>
+          <div><span>Last transfer</span><strong>{preferences.portability.lastImportAt ? new Date(preferences.portability.lastImportAt).toLocaleDateString() : preferences.portability.lastExportAt ? new Date(preferences.portability.lastExportAt).toLocaleDateString() : 'Not yet transferred'}</strong></div>
+          <div><span>Recovery</span><strong>{diagnostics.backupAvailable ? 'Backup available' : 'No backup yet'}</strong></div>
+        </div>
+
         <nav className="portable-tabs" aria-label="Personal workspace sections">
-          {([
-            ['guide', 'Guided setup'],
-            ['customize', 'Customize'],
-            ['profiles', 'Profiles'],
-            ['transfer', 'Transfer'],
-            ['recovery', 'Recovery'],
-          ] as Array<[CenterTab, string]>).map(([id, label]) => <button key={id} type="button" className={tab === id ? 'is-active' : ''} onClick={() => setTab(id)}>{label}</button>)}
+          {(Object.keys(centerTabMeta) as CenterTab[]).map((id) => <button key={id} type="button" className={tab === id ? 'is-active' : ''} onClick={() => setTab(id)} aria-current={tab === id ? 'page' : undefined}><i aria-hidden="true">{centerTabMeta[id].symbol}</i><strong>{centerTabMeta[id].label}</strong><small>{centerTabMeta[id].detail}</small></button>)}
         </nav>
 
         {message ? <div className="portable-message" role="status"><span>{message}</span><button type="button" onClick={() => setMessage(null)} aria-label="Dismiss message">×</button></div> : null}
@@ -417,7 +426,7 @@ export function CustomizationCenter({ open, preferences, navigationOptions, onCh
           </> : null}
         </div>
 
-        <footer className="customization-footer"><button type="button" className="danger-text-button" onClick={onReset}>Reset all preferences</button><span>Schema v2 · Workbench Studio 0.8.3</span><button type="button" className="primary-button" onClick={onClose}>Done</button></footer>
+        <footer className="customization-footer"><button type="button" className="danger-text-button" onClick={onReset}>Reset all preferences</button><span>Schema v2 · Workbench Studio 0.8.4</span><button type="button" className="primary-button" onClick={onClose}>Done</button></footer>
       </section>
     </div>
   );

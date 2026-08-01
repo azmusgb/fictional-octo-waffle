@@ -46,10 +46,9 @@ public sealed partial class TextLogArtifactParser : IArtifactParser
 
         await using var stream = File.OpenRead(context.FilePath);
         using var reader = new StreamReader(stream, Encoding.UTF8, true, 64 * 1024);
-        while (!reader.EndOfStream)
+        while (await reader.ReadLineAsync(cancellationToken) is { } line)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var line = await reader.ReadLineAsync(cancellationToken) ?? string.Empty;
             lineCount++;
 
             if (preview.Length < ParsingHelpers.MaximumPreviewCharacters)

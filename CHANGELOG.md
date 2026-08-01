@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.4 — 2026-08-01
+
+### Rich experience polish
+
+- Added a decision-posture hero with readiness, open-risk, coverage, review, profile, and snapshot context.
+- Added direct next-action pathways for blocker review, snapshot comparison, command search, and workspace tuning.
+- Reworked visual hierarchy with layered surfaces, ambient evidence-network motion, richer focus states, and clearer active navigation.
+- Enhanced Portable Workspace with state summaries, descriptive tab navigation, stronger progress cues, and improved responsive behavior.
+- Preserved reduced-motion support, local-first processing, and the strict preference-versus-governed-record boundary.
+- Updated the hosted adapter and React source in parity.
+
 ## 0.8.3 — 2026-08-01
 
 ### Portable workspace

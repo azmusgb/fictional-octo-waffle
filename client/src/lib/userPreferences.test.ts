@@ -45,6 +45,7 @@ describe('user preferences', () => {
     const parsed = parsePreferencesPackage(serializePreferencesPackage(pkg));
     const applied = applyPreferencesPackage({ ...DEFAULT_USER_PREFERENCES, mobileTabs: ['system'] }, parsed, ['navigation']);
     expect(parsed.deviceLabel).toBe('Test device');
+    expect(parsed.appVersion).toBe('0.8.4');
     expect(applied.mobileTabs).toEqual(DEFAULT_USER_PREFERENCES.mobileTabs);
   });
 });

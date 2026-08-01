@@ -42,13 +42,20 @@ public sealed class CsvArtifactParser : IArtifactParser
             var field = new StringBuilder();
             var inQuotes = false;
             var rowNumber = 1;
+            var reachedEndOfStream = false;
             var findings = new List<ParserFinding>();
             var previewBuilder = new StringBuilder();
 
-            while (!reader.EndOfStream && rows.Count < MaximumAnalyzedRows)
+            while (rows.Count < MaximumAnalyzedRows)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var line = await reader.ReadLineAsync(cancellationToken) ?? string.Empty;
+                var line = await reader.ReadLineAsync(cancellationToken);
+                if (line is null)
+                {
+                    reachedEndOfStream = true;
+                    break;
+                }
+
                 if (previewBuilder.Length < ParsingHelpers.MaximumPreviewCharacters)
                 {
                     previewBuilder.AppendLine(line);
@@ -66,6 +73,13 @@ public sealed class CsvArtifactParser : IArtifactParser
                 rows.Add(current.ToArray());
                 current.Clear();
                 rowNumber++;
+            }
+
+            var hasAdditionalRows = false;
+            if (!reachedEndOfStream && rows.Count >= MaximumAnalyzedRows)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                hasAdditionalRows = await reader.ReadLineAsync(cancellationToken) is not null;
             }
 
             if (inQuotes)
@@ -136,7 +150,7 @@ public sealed class CsvArtifactParser : IArtifactParser
                 nullCounts[name] = rows.Skip(1).Count(row => column >= row.Length || string.IsNullOrWhiteSpace(row[column]));
             }
 
-            if (!reader.EndOfStream)
+            if (hasAdditionalRows)
             {
                 findings.Add(new ParserFinding(
                     FindingSeverity.Info,

@@ -1,4 +1,4 @@
-# Workbench Studio v8.3 validation record
+# Workbench Studio v8.4 validation record
 
 ## Completed in this environment
 
@@ -103,3 +103,16 @@
 - Loader source is pinned to the immutable v8.3 merge commit.
 - Browser gzip/base64 decoding, `atob`, and `DecompressionStream`: absent.
 - Runtime error clusters after deployment: none detected.
+## v8.4 rich-experience validation
+
+- React source adds a decision-posture hero with dynamic health, open-risk, coverage, review, snapshot, and active-profile context.
+- Direct next actions route to findings, review, compare, command search, and workspace customization without mutating evidence.
+- Portable Workspace exposes profile, onboarding, transfer, and recovery state before progressive-detail tabs.
+- Hosted and React surfaces share the same experience hierarchy and local-first trust language.
+- Embedded hosted JavaScript passed `node --check`.
+- React source passed strict TypeScript checking with local compatibility declarations.
+- JSON package files parsed successfully.
+- Mobile layouts collapse hero actions, control deck, summary cards, and portable navigation without horizontal dependency.
+- Reduced-motion behavior disables ambient node animation and nonessential surface transitions.
+- No evidence, parser, SQLite, policy, approval, or audit-record behavior was changed.
+
