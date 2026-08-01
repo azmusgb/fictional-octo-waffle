@@ -1,0 +1,45 @@
+name: Sync final Workbench Studio v6 source
+
+on:
+  push:
+    branches:
+      - sync-final-v6
+    paths:
+      - '.github/workflows/sync-final-v6.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  sync-final-source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download and verify final archive
+        shell: bash
+        run: |
+          curl --fail --location --retry 3 --output /tmp/WorkbenchStudio-v6.zip 'https://at.adobe.com/Ym5wCCGO1Pn4OOCJ'
+          echo '1f8f4ca28ad2e3c06b5238089d712dc93865f2affa5fb94b7baee1bd8f70726b  /tmp/WorkbenchStudio-v6.zip' | sha256sum --check --strict
+          unzip -q /tmp/WorkbenchStudio-v6.zip -d /tmp/workbench-final
+          test -f /tmp/workbench-final/WorkbenchStudio-v6/README.md
+          test -f /tmp/workbench-final/WorkbenchStudio-v6/WorkbenchStudio.sln
+          test -f /tmp/workbench-final/WorkbenchStudio-v6/client/src/components/OperationsCenter.tsx
+          test -f /tmp/workbench-final/WorkbenchStudio-v6/server/WorkbenchStudio.Api/Endpoints/OperationsEndpoints.cs
+          test -f /tmp/workbench-final/WorkbenchStudio-v6/hosted/index.html
+
+      - name: Replace branch with final verified source
+        shell: bash
+        run: |
+          rsync -a --delete --exclude='.git/' /tmp/workbench-final/WorkbenchStudio-v6/ ./
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'Repository already matches the final archive.'
+            exit 0
+          fi
+          git commit -m 'Sync repository to final Workbench Studio v6 archive'
+          git push origin HEAD:sync-final-v6
