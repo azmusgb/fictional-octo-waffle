@@ -1,0 +1,15 @@
+{
+  "project": "Sample Operations Review",
+  "version": 2,
+  "owners": [
+    { "id": "OPS-101", "name": "Operations" },
+    { "id": "ENG-220", "name": "Engineering" }
+  ],
+  "workflows": [
+    {
+      "id": "WF-IMPORT",
+      "name": "Import artifacts",
+      "steps": ["upload", "inventory", "parse", "validate", "report"]
+    }
+  ]
+}

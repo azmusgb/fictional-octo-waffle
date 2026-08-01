@@ -1,0 +1,27 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+
+# Node
+node_modules/
+client/dist/
+
+# Runtime workspace
+.workspace/
+server/WorkbenchStudio.Api/wwwroot/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test output
+TestResults/
+coverage/
+playwright-report/
