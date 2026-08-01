@@ -25,6 +25,7 @@ client/src/components/OperationsCenter.tsx
 client/src/components/ReviewQueue.tsx
 client/src/components/StatusBadge.tsx
 client/src/components/SystemCenter.tsx
+client/src/components/WorkspaceHero.tsx
 client/src/components/WorkspaceInsights.tsx
 client/src/lib/api.ts
 client/src/lib/format.test.ts

@@ -34,3 +34,7 @@ V8.2 makes the command-intelligence workbench adaptable without weakening its ev
 ## v8.3 portable workspace
 
 V8.3 makes personalization durable: users can select a guided role preset, save named workspace profiles, transfer selected settings between devices, inspect migration and storage diagnostics, and recover from a corrupt or unwanted preference state. Continuous cloud synchronization remains outside the release until authenticated storage and conflict semantics exist.
+## v8.4 rich experience
+
+V8.4 changes the center of gravity from a collection of equally weighted panels to a decision-oriented workspace. The interface now states the current posture, explains why it matters, exposes the next defensible actions, and progressively reveals detail. Visual depth and motion remain restrained and accessibility-aware.
+
